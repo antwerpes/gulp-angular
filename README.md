@@ -19,9 +19,15 @@ gulp = require 'gulp'
 require('gulp-angular')(gulp)
 ```
 
-## Tasks
+## Modules
 
 ### Core
+
+#### Prerequisites
+
+TODO
+
+#### Tasks
 
 Task | Description
 ---- | -----------
@@ -45,7 +51,75 @@ Task | Description
 
 ### Cordova
 
-TODO
+#### Prerequisites
+
+- Your project needs to be a valid cordova project that has a config.xml file, www and hooks directories).
+- Existence of gulp-angular-config.js file in the root of your project (example see below).
+- Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files.
+
+gulp-angular-config.js
+
+```javascript
+module.exports = {
+	...
+	appName: '', /* same value as the <name> field inside config.xml */
+	ftp: { /* used to publish ipa and apk files to an FTP server */
+		hostname: '',
+		username: '',
+		password: '',
+		directory: ''
+	},
+	ios: { /* used for building a signed ipa file */
+		provisioningProfile: '' /* name as it appears in Xcode build settings */
+	},
+	android: { /* used for building a signed apk file */
+		sign: [ /* text will be copied into platforms/android/ant.properties */
+			'key.store=', /* path to exported keystore file */
+			'key.store.password=',
+			'key.alias=',
+			'key.alias.password='
+		]
+	},
+	...
+}
+```
+
+hooks/after_platform_add/configure_android_keys.js
+```javascript
+#!/usr/bin/env node
+
+var fs = require('fs');
+
+if (!fs.existsSync('platforms/android')) return;
+
+var config = require('../../gulp-angular-config.js');
+
+var stream = fs.createWriteStream('platforms/android/ant.properties');
+stream.once('open', function() {
+	config.android.sign.forEach(function (line) {
+		stream.write(line + '\n');
+	});
+  stream.end();
+});
+```
+
+#### Tasks
+
+Task | Description
+---- | -----------
+`cordova:init` | Generates Cordova iOS and Android platform projects by simply executing `cordova platform add ios and `cordova platform add android` shell commands. Depends on `cordova:destroy`.
+`cordova:destroy` | Deletes any cordova related output directories like plugins, platforms and release (that can be regenerated at any time).
+`cordova:clean:ios` | Deletes iOS specific files from the release directory (`*.ipa, *dSYM.zip, *.xcarchive`).
+`cordova:clean:android` | Deletes Android specific files from the release directory (`*.apk`).
+`cordova:clean` | Deletes iOS and Android specific files from the release directory (`*.ipa, *dSYM.zip, *.xcarchive, *.apk`), leaving other files and the directory itself in place. Depends on `cordova:clean:ios`, `cordova:clean:android`.
+`cordova:build:ios` | Builds a production-/distribution-ready iOS app to the release directory.<br />- Generates an .ipa and an .xcarchive file.<br />- Reads a `config` object from gulp-angular-config.js.<br />- Takes `config.appName` as the base filename for output files and for Xcode build scheme selection. This name must exactly match the cordova project name in config.xml.<br />- Signs the app with the provisioning profile named in `config.ios.provisioningProfile`. Depends on `cordova:clean:ios`.
+`cordova:build:android` | Builds a production-/distribution-ready Android app (.apk file) into the release directory. Configuration of app signing must be performed separately e.g. via a custom after_platform_add cordova hook. Depends on `cordova:clean:android`.
+`cordova:build` | Builds production-/distribution-ready iOS and Android apps into the release directory. Depends on `cordova:build:ios`, `cordova:build:android`.
+`cordova:deploy:ios` | Uploads .ipa files found in the release directory to an FTP server location that must be specified in gulp-angular-config.js.
+`cordova:deploy:android` | Uploads .apk files found in the release directory to an FTP server location that must be specified in gulp-angular-config.js.
+`cordova:deploy` | Uploads .ipa and .apk files found in the release directory to an FTP server location that must be specified in gulp-angular-config.js. Depends on `cordova:deploy:ios`, `cordova:deploy:android`.
+`cordova:run:ios` | Runs the iOS platform project on the currently plugged-in device. Requires 'ios-deploy' node module to be installed globally.
+`cordova:run:android` | Runs the Android platform project on the currently plugged-in device.
 
 ### Node-Webkit
 
