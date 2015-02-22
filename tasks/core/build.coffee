@@ -1,6 +1,6 @@
 module.exports = (gulp, $) ->
 	# Optimizes and copies images from src to dist, ignoring images found in bower components.
-	gulp.task 'core:images', ->
+	gulp.task 'core:build:images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/bower_components/**']
 			.pipe $.imagemin
 				optimizationLevel: 3
@@ -10,7 +10,7 @@ module.exports = (gulp, $) ->
 			.pipe $.size()
 
 	# Copies fonts from src to dist, including those found in bower components.
-	gulp.task 'core:fonts', ->
+	gulp.task 'core:build:fonts', ->
 		bowerFonts = gulp.src $.mainBowerFiles(), base: 'src'
 			.pipe $.filter '**/*.{otf,eot,svg,ttf,woff}'
 		myFonts = gulp.src ['src/**/*.{otf,eot,svg,ttf,woff}', '!src/bower_components/**']
@@ -20,7 +20,7 @@ module.exports = (gulp, $) ->
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
-	gulp.task 'core:partials', ->
+	gulp.task 'core:build:partials', ->
 		gulp.src ['src/**/*.html', '!src/index.html', '!src/bower_components/**']
 			.pipe $.minifyHtml
 				empty: yes
@@ -89,7 +89,7 @@ module.exports = (gulp, $) ->
 
 	# Performs the actual minification and concatenation of html, css and js files,
 	# resulting in a production-/distribution-ready version of the web app in dist.
-	gulp.task 'core:build', ['core:build-prepare'], ->
+	gulp.task 'core:build-build', ['core:build-prepare'], ->
 		gulp.src 'dist/index.html'
 			# Inject angular pre-cached partials into index.html:
 			.pipe $.inject gulp.src('dist/**/*.partial.js', read: no),
@@ -133,5 +133,5 @@ module.exports = (gulp, $) ->
 			cb()
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
-	gulp.task 'core:dist', (cb) ->
-		$.runSequence 'core:clean', ['core:inject', 'core:images', 'core:fonts', 'core:partials'], 'core:build', 'core:build-cleanup', cb
+	gulp.task 'core:build', (cb) ->
+		$.runSequence 'core:clean', ['core:inject', 'core:build:images', 'core:build:fonts', 'core:build:partials'], 'core:build-build', 'core:build-cleanup', cb

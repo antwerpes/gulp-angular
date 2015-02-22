@@ -33,4 +33,4 @@ module.exports = (gulp, $) ->
 	# Builds and serves a clean development version of the web app while watching for source file changes.
 	gulp.task 'core:serve:dev', (cb) -> $.runSequence 'core:clean', 'core:watch', 'core:serve:dev-browser-sync', cb
 	# Starts a local web server serving the production-/distribution-ready version of the web app.
-	gulp.task 'core:serve:dist', (cb) -> $.runSequence 'core:dist', 'core:serve:dist-browser-sync', cb
+	gulp.task 'core:serve:dist', (cb) -> $.runSequence 'core:build', 'core:serve:dist-browser-sync', cb

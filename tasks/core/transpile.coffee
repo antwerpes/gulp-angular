@@ -18,7 +18,7 @@ module.exports = (gulp, $) ->
 
 	# Transpiles coffee files found in src into js files copied to tmp.
 	# Lints coffeescript and converts coffeescript classes to angular
-	# syntax before transpilation. Sourcemaps are not supported yet.
+	# syntax (ng-classify) before transpilation. Sourcemaps are not supported yet.
 	gulp.task 'core:transpile:scripts', ->
 		gulp.src ['src/**/*.coffee', '!src/bower_components/**']
 			.pipe $.changed 'tmp', extension: '.js' # keep traffic low (important for watch task)

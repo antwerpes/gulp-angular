@@ -45,5 +45,5 @@ module.exports = (gulp) ->
 		'./inject'
 		'./watch'
 		'./serve'
-		'./dist'
+		'./build'
 	]
