@@ -14,12 +14,20 @@ When consuming the plugin and developing it further:
 
 ## Usage
 
+Require all modules/task collections:
+
 ```javascript
-gulp = require 'gulp'
-require('gulp-angular')(gulp)
+var gulp = require('gulp');
+require('gulp-angular')(gulp);
 ```
 
-## Modules
+Require a specific module/task collection selectively:
+```javascript
+var gulp = require('gulp');
+require('gulp-angular/cordova')(gulp);
+```
+
+## Modules/Task Collections
 
 ### Core
 
@@ -53,9 +61,10 @@ Task | Description
 
 #### Prerequisites
 
-- Your project needs to be a valid cordova project that has a config.xml file, www and hooks directories).
-- Existence of gulp-angular-config.js file in the root of your project (example see below).
-- Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files.
+- If used together with the core module, make the cordova www directory a symlink to the dist directory.
+- Your project needs to be a valid cordova project that has a config.xml file, www and hooks directories.
+- Existence of gulp-angular-config.js file in the root of your project (see below).
+- Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files (see below).
 
 gulp-angular-config.js
 
@@ -69,10 +78,10 @@ module.exports = {
 		password: '',
 		directory: ''
 	},
-	ios: { /* used for building a signed ipa file */
+	ios: { /* used for building signed ipa files */
 		provisioningProfile: '' /* name as it appears in Xcode build settings */
 	},
-	android: { /* used for building a signed apk file */
+	android: { /* used for building signed apk files */
 		sign: [ /* text will be copied into platforms/android/ant.properties */
 			'key.store=', /* path to exported keystore file */
 			'key.store.password=',
