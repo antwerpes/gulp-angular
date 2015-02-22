@@ -4,11 +4,11 @@ A collection of gulp tasks for developing angular applications.
 
 ## Installation
 
-When only consuming the plugin:
+When just consuming:
 
-`npm install --save-dev url/to/gulp-angular`
+`npm install --save-dev https://github.com/antwerpes/gulp-angular.git`
 
-When consuming the plugin and developing it further:
+When consuming and developing it further:
 
 `npm install --save-dev path/to/your/local/copy/of/gulp-angular/git/repository`
 
