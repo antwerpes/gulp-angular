@@ -24,7 +24,7 @@ require('gulp-angular')(gulp);
 Require a specific module/task collection selectively:
 ```javascript
 var gulp = require('gulp');
-require('gulp-angular/cordova')(gulp);
+require('gulp-angular/tasks/cordova')(gulp);
 ```
 
 ## Modules/Task Collections
