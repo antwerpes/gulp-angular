@@ -129,18 +129,3 @@ Task | Description
 `cordova:deploy` | Uploads .ipa and .apk files found in the release directory to an FTP server location that must be specified in gulp-angular-config.js. Depends on `cordova:deploy:ios`, `cordova:deploy:android`.
 `cordova:run:ios` | Runs the iOS platform project on the currently plugged-in device. Requires 'ios-deploy' node module to be installed globally.
 `cordova:run:android` | Runs the Android platform project on the currently plugged-in device.
-
-### Node-Webkit
-
-TODO
-
-## TODOs
-
-- Turn this into a Yeoman generator(?)
-- Write tasks for unit and end-to-end testing.
-- Put node dependencies **not** in index.coffee, but in the task files where they should be required.
-- Fix handleStreamError behaviour: doesn't stop on startup when used with $.sequence (e.g. core:serve:dev) but works when called in a task that is called directly (e.g. core:transpile:styles).
-- Walk recursively through tasks directory to build up array of files to be required in index.coffee (maybe use https://www.npmjs.com/package/fs-walk).
-- Check how well absolute paths are being rebased.
-- For some reason, this does not work: `cd path/to/your/project && npm link path/to/your/local/copy/of/gulp-angular/git/repository`
-- Find the parent project's package.json automatically without assuming the module to be located inside node_modules/gulp-angular.
