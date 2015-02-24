@@ -116,7 +116,7 @@ stream.once('open', function() {
 
 Task | Description
 ---- | -----------
-`cordova:init` | Generates Cordova iOS and Android platform projects by simply executing `cordova platform add ios and `cordova platform add android` shell commands. Depends on `cordova:destroy`.
+`cordova:init` | Generates Cordova iOS and Android platform projects by simply executing `cordova platform add ios` and `cordova platform add android` shell commands. Depends on `cordova:destroy`.
 `cordova:destroy` | Deletes any cordova related output directories like plugins, platforms and release (that can be regenerated at any time).
 `cordova:clean:ios` | Deletes iOS specific files from the release directory (`*.ipa, *dSYM.zip, *.xcarchive`).
 `cordova:clean:android` | Deletes Android specific files from the release directory (`*.apk`).
