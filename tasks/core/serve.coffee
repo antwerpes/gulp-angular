@@ -33,6 +33,6 @@ module.exports = (gulp, $) ->
 		, (err) -> if err then $.handleStreamError(err) else cb()
 
 	# Builds and serves a clean development version of the web app while watching for source file changes.
-	gulp.task 'core:serve:dev', (cb) -> $.runSequence 'core:clean', 'core:watch', 'core:serve:browser-sync:dev', cb
+	gulp.task 'core:serve:dev', (cb) -> $.runSequence 'core:watch', 'core:serve:browser-sync:dev', cb
 	# Starts a local web server serving the production-/distribution-ready version of the web app.
 	gulp.task 'core:serve:dist', (cb) -> $.runSequence 'core:build', 'core:serve:browser-sync:dist', cb
