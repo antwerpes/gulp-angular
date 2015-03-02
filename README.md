@@ -6,11 +6,20 @@ A collection of gulp tasks for developing angular applications.
 
 When just consuming:
 
-`npm install --save-dev https://github.com/antwerpes/gulp-angular.git`
+```bash
+npm install --save-dev antwerpes/gulp-angular
+```
 
 When consuming and developing it further:
 
-`npm install --save-dev path/to/your/local/copy/of/gulp-angular/git/repository`
+```bash
+cd /path/to/projects/folder
+git clone git+ssh://git@github.com/antwerpes/gulp-angular.git
+npm link
+cd /path/to/project/using/gulp-angular
+echo add "gulp-angular": "git+ssh://git@github.com:antwerpes/gulp-angular" to devDependencies in package.json
+npm link gulp-angular
+```
 
 ## Usage
 
