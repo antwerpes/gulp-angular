@@ -27,5 +27,5 @@ module.exports = (gulp, $) ->
 			.on 'change', (path) ->
 				gulp.start switch $.path.extname path
 					when '.less', '.scss'	then 'core:transpile:styles'
-					when '.coffee'				then 'core:transpile:scripts'
-					when '.jade'					then 'core:transpile:jade'
+					when '.coffee'			then 'core:transpile:scripts'
+					when '.jade'			then 'core:transpile:jade'

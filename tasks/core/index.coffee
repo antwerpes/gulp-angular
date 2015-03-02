@@ -5,7 +5,6 @@ $ =
 	angularFileSort:   require 'gulp-angular-filesort'
 	if:                require 'gulp-if'
 	less:              require 'gulp-less'
-	sass:              require 'gulp-sass'
 	jade:              require 'gulp-jade'
 	util:              require 'gulp-util'
 	autoprefixer:      require 'gulp-autoprefixer'
@@ -36,6 +35,11 @@ $ =
 	rev:               require 'gulp-rev'
 	revReplace:        require 'gulp-rev-replace'
 	fs:                require 'fs'
+
+try $.sass = require 'gulp-sass'
+catch e 
+	console.warn 'sass not available'
+	$.sass = $.util.noop
 
 module.exports = (gulp, config, packageJson) ->
 	$.config = config
