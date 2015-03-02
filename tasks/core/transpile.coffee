@@ -31,7 +31,7 @@ module.exports = (gulp, $) ->
 			.pipe $.size()
 
 	# Transpiles jade files found in src into html files copied to tmp.
-	gulp.task 'core:transpile:jade', ->
+	gulp.task 'core:transpile:templates', ->
 		gulp.src ['src/**/*.jade', '!src/bower_components/**']
 			.pipe $.changed 'tmp', extension: '.html' # keep traffic low (important for watch task)
 			.pipe $.jade()
@@ -40,4 +40,4 @@ module.exports = (gulp, $) ->
 			.pipe $.size()
 
 	# Transpiles styles and scripts from src to tmp.
-	gulp.task 'core:transpile', ['core:transpile:styles', 'core:transpile:scripts', 'core:transpile:jade']
+	gulp.task 'core:transpile', ['core:transpile:styles', 'core:transpile:scripts', 'core:transpile:templates']

@@ -25,7 +25,7 @@ module.exports = (gulp, $) ->
 				$.del tmpFile
 				gulp.start 'core:inject'
 			.on 'change', (path) ->
-				gulp.start switch $.path.extname path
-					when '.less', '.scss'	then 'core:transpile:styles'
-					when '.coffee'			then 'core:transpile:scripts'
-					when '.jade'			then 'core:transpile:jade'
+				gulp.start 'core:transpile:' + switch $.path.extname path
+					when '.less', '.scss'	then 'styles'
+					when '.coffee'			then 'scripts'
+					when '.jade'			then 'templates'

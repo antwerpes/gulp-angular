@@ -20,8 +20,8 @@ module.exports = (gulp, $) ->
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
-	gulp.task 'core:build:partials', ->
-		gulp.src ['src/**/*.html', '!src/index.html', '!src/bower_components/**']
+	gulp.task 'core:build:partials', ['core:transpile:templates'], ->
+		gulp.src ['src/**/*.html', 'tmp/**/*.html', '!src/index.html', '!src/bower_components/**']
 			.pipe $.minifyHtml
 				empty: yes
 				spare: yes
@@ -52,7 +52,7 @@ module.exports = (gulp, $) ->
 	#    tmp/index.html (within <!-- build:js --> blocks)
 	#    to dist, leaving their content untouched.
 	# TODO: check how absolute paths are being rebased
-	gulp.task 'core:build-prepare', ->
+	gulp.task 'core:build-prepare', ['core:transpile:styles', 'core:transpile:scripts'], ->
 		# Define reusable partial pipelines with lazypipe so
 		# that more than one operation can be performed in a $.if step.
 		# rebaseTmp and rebaseSrc lazypipes receive the stream of individual asset
