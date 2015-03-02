@@ -5,13 +5,15 @@ module.exports = (gulp, $) ->
 	# in order to ensure that the injected version of index.html gets served.
 	gulp.task 'core:serve:browser-sync:dev', (cb) ->
 		$.browserSync
-			files: [ # files being watched
-				'{tmp,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
+			# files: [ # files being watched
+			# 	'{tmp,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
+			# TODO: trigger browsersync manually. see https://github.com/antwerpes/gulp-angular/issues/12
 			server:
 				baseDir: ['tmp', 'src'] # order is important here! files in tmp have precedence
 			startPath: '/index.html'
 			browser: 'default'
 			open: no
+			ui: no
 			ghostMode: no # disable syncing across browser instances
 			online: no
 			notify: yes

@@ -1,12 +1,12 @@
 $ =
 	handleStreamError: require '../../helper/handle-stream-error'
-	packageJson:       require '../../../../package.json'
-	config:            require '../../../../gulp-angular-config.js'
 	del:               require 'del'
 	changed:           require 'gulp-changed'
+	angularFileSort:   require 'gulp-angular-filesort'
 	if:                require 'gulp-if'
 	less:              require 'gulp-less'
 	sass:              require 'gulp-sass'
+	jade:              require 'gulp-jade'
 	util:              require 'gulp-util'
 	autoprefixer:      require 'gulp-autoprefixer'
 	size:              require 'gulp-size'
@@ -18,7 +18,6 @@ $ =
 	gracefulChokidar:  require 'graceful-chokidar'
 	path:              require 'path'
 	browserSync:       require 'browser-sync'
-	runSequence:       require 'run-sequence'
 	imagemin:          require 'gulp-imagemin'
 	mainBowerFiles:    require 'main-bower-files'
 	filter:            require 'gulp-filter'
@@ -38,7 +37,10 @@ $ =
 	revReplace:        require 'gulp-rev-replace'
 	fs:                require 'fs'
 
-module.exports = (gulp) ->
+module.exports = (gulp, config, packageJson) ->
+	$.config = config
+	$.packageJson = packageJson
+	$.runSequence = require('run-sequence').use(gulp)
 	require(task)(gulp, $) for task in [
 		'./clean'
 		'./transpile'

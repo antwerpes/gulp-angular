@@ -1,5 +1,4 @@
 $ =
-	config: require '../../../../gulp-angular-config.js'
 	del:    require 'del'
 	shell:  require 'gulp-shell'
 	ftp:    require 'gulp-ftp'

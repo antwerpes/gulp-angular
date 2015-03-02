@@ -15,15 +15,17 @@ module.exports = (gulp, $) ->
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) -> gulp.start 'core:inject'
+			.on 'error', (error) -> console.error('Error happened', error)
 			.on 'unlink', (path) ->
-				ext = $.path.extname path
 				tmpFile = path.replace /^src/, 'tmp'
-				tmpFile = tmpFile.replace /less$/, 'css' if ext == '.less'
-				tmpFile = tmpFile.replace /scss$/, 'css' if ext == '.scss'
-				tmpFile = tmpFile.replace /coffee$/, 'js' if ext == '.coffee'
+					.replace /\.less$/, 'css'
+					.replace /\.scss$/, 'css'
+					.replace /\.coffee$/, 'js'
+					.replace /\.jade$/, 'html'
 				$.del tmpFile
 				gulp.start 'core:inject'
 			.on 'change', (path) ->
-				ext = $.path.extname path
-				gulp.start 'core:transpile:styles' if ext == '.less' or ext == '.scss'
-				gulp.start 'core:transpile:scripts' if ext == '.coffee'
+				gulp.start switch $.path.extname path
+					when '.less', '.scss'	then 'core:transpile:styles'
+					when '.coffee'				then 'core:transpile:scripts'
+					when '.jade'					then 'core:transpile:jade'

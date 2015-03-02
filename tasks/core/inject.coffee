@@ -6,15 +6,21 @@ module.exports = (gulp, $) ->
 	# Because we want to overwrite bootstrap styles in vendor.css,
 	# we @import them over there and don't inject them here.
 	gulp.task 'core:inject', ['core:transpile'], ->
+		# sort js dependencies by modules and dependecies
+		jsSources = gulp.src(['{src,tmp}/**/*.js', '!src/bower_components/**', '!**/*{test,e2e,partial}.js'])
+			.pipe($.angularFileSort())
+
+		cssSources = gulp.src(['{src,tmp}/**/*.css', '!src/bower_components/**'], read: no)
+
 		gulp.src 'src/index.html'
 			.pipe $.wiredep.stream
 				directory: 'src/bower_components'
 				exclude: 'bootstrap/*.css'
-			.pipe $.inject gulp.src(['{src,tmp}/**/*.css', '!src/bower_components/**'], read: no),
+			.pipe $.inject cssSources,
 				starttag: '<!-- inject:styles -->'
 				addRootSlash: no
-				ignorePath: ['src', 'tmp'] # strips away the 'str/' and 'tmp/' path components
-			.pipe $.inject gulp.src(['{src,tmp}/**/*.js', '!src/bower_components/**', '!**/*{test,e2e,partial}.js'], read: no),
+				ignorePath: ['src', 'tmp'] # strips away the 'src/' and 'tmp/' path components
+			.pipe $.inject jsSources,
 				starttag: '<!-- inject:scripts -->'
 				addRootSlash: no
 				ignorePath: ['src', 'tmp']
