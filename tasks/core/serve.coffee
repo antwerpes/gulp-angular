@@ -7,7 +7,7 @@ module.exports = (gulp, $) ->
 		$.browserSync
 			# files: [ # files being watched
 			# 	'{tmp,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
-			# TODO: trigger browsersync manually. see https://github.com/antwerpes/gulp-angular/issues/12
+			# this is triggered manually to avoid having too many watches
 			server:
 				baseDir: ['tmp', 'src'] # order is important here! files in tmp have precedence
 			startPath: '/index.html'

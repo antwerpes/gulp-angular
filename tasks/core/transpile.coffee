@@ -14,6 +14,7 @@ module.exports = (gulp, $) ->
 					$.util.beep()
 			.pipe $.autoprefixer()
 			.pipe gulp.dest 'tmp'
+			.pipe $.browserSync.reload stream: yes
 			.pipe $.size()
 
 	# Transpiles coffee files found in src into js files copied to tmp.
@@ -28,6 +29,7 @@ module.exports = (gulp, $) ->
 			.pipe $.coffee sourceMap: false
 				.on 'error', $.handleStreamError
 			.pipe gulp.dest 'tmp'
+			.pipe $.browserSync.reload stream: yes
 			.pipe $.size()
 
 	# Transpiles jade files found in src into html files copied to tmp.
@@ -37,7 +39,9 @@ module.exports = (gulp, $) ->
 			.pipe $.jade()
 			.on 'error', $.handleStreamError
 			.pipe gulp.dest 'tmp'
+			.pipe $.browserSync.reload stream: yes
 			.pipe $.size()
 
 	# Transpiles styles and scripts from src to tmp.
 	gulp.task 'core:transpile', ['core:transpile:styles', 'core:transpile:scripts', 'core:transpile:templates']
+	

@@ -11,7 +11,7 @@ module.exports = (gulp, $) ->
 				persistent: yes
 			.on 'change', -> gulp.start 'core:inject'
 		$.gracefulChokidar.watch 'src',
-				ignored: /bower_components|^.*\.(?!less$|scss$|coffee$)[^.]+$/
+				ignored: /bower_components|^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) -> gulp.start 'core:inject'
@@ -29,3 +29,15 @@ module.exports = (gulp, $) ->
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
+		
+		$.gracefulChokidar.watch 'src',
+				ignored: /bower_components|^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
+				ignoreInitial: yes
+				persistent: yes
+			.on 'add', (path) -> gulp.start 'core:inject'
+			.on 'error', (error) -> console.error('Error happened', error)
+			.on 'unlink', (path) -> gulp.start 'core:inject'
+			.on 'change', (path) ->
+				switch $.path.extname path
+					when '.html', '.js'	then $.browserSync.reload()
+					else $.browserSync.reload path
