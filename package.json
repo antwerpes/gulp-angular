@@ -6,7 +6,8 @@
   "main": "index.js",
   "contributors": [
     "Andreas Tietz <andreas.tietz@antwerpes.de> (https://github.com/dematerializer)",
-    "David Buezas <david.buezas@antwerpes.de> (https://github.com/dbuezas)"
+    "David Buezas <david.buezas@antwerpes.de> (https://github.com/dbuezas)",
+    "Marc Lutz <marc.lutz@antwerpes.de> (https://github.com/monestereo)"
   ],
   "homepage": "https://github.com/antwerpes/gulp-angular",
   "bugs": "https://github.com/antwerpes/gulp-angular/issues",
