@@ -42,7 +42,57 @@ require('gulp-angular/tasks/cordova')(gulp);
 
 #### Prerequisites
 
-TODO
+##### /src/index.html:
+```html
+<!doctype html>
+<html>
+  <head>
+	<!-- build:css({tmp,src}) styles/vendor.css -->
+		<!-- bower:css -->
+			<!-- STYLES FROM BOWER_COMPONENTS WILL BE AUTOMATICALLY INJECTED HERE -->
+		<!-- endbower -->
+	<!-- endbuild -->
+
+	<!-- build:css({tmp,src}) styles/main.css -->
+		<!-- inject:styles -->
+			<!-- OWN STYLES WILL BE AUTOMATICALLY INJECTED HERE -->
+		<!-- endinject -->
+	<!-- endbuild -->
+  </head>
+  <body>
+	<div ui-view class="rootView"></div>
+	<!-- build:js scripts/vendor.js -->
+		<!-- bower:js -->
+			<!-- SCRIPTS FROM BOWER_COMPONENTS WILL BE AUTOMATICALLY INJECTED HERE -->
+		<!-- endbower -->
+	<!-- endbuild -->
+
+	<!-- build:js scripts/main.js -->
+		<!-- inject:scripts -->
+			<!-- OWN SCRIPTS WILL BE AUTOMATICALLY INJECTED HERE -->
+		<!-- endinject -->
+		<!-- inject:partials -->
+			<!-- OWN ANGULAR TEMPLATES WILL BE AUTOMATICALLY INJECTED HERE -->
+		<!-- endinject -->
+	<!-- endbuild -->
+  </body>
+</html>
+```
+##### /gulpfile.js
+```js
+var gulp = require('gulp');
+var config = {}
+var packageJson = require('./package.json');
+
+require('gulp-angular')(gulp, config, packageJson);
+```
+
+##### /.bowerrc
+```js
+{
+	"directory": "src/bower_components"
+}
+```
 
 #### Tasks
 
@@ -75,10 +125,10 @@ Task | Description
 - Existence of gulp-angular-config.js file in the root of your project (see below).
 - Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files (see below).
 
-gulp-angular-config.js
-
-```javascript
-module.exports = {
+##### /gulpfile.js
+```js
+var gulp = require('gulp');
+var config = {
 	...
 	appName: '', /* same value as the <name> field inside config.xml */
 	ftp: { /* used to publish ipa and apk files to an FTP server */
@@ -100,9 +150,12 @@ module.exports = {
 	},
 	...
 }
+var packageJson = require('./package.json');
+
+require('gulp-angular')(gulp, config, packageJson);
 ```
 
-hooks/after_platform_add/configure_android_keys.js
+##### /hooks/after_platform_add/configure_android_keys.js
 ```javascript
 #!/usr/bin/env node
 
