@@ -120,14 +120,13 @@ Task | Description
 
 #### Prerequisites
 TODO work in progress
-- package.json in /src with `main: "index.html"`
+- /src/package.json in with `main: "index.html"`
 - configuration in /package.json/gulp-angular-config/webkit (see options in https://github.com/mllrsohn/node-webkit-builder)
+
 Task | Description
 ---- | -----------
 `webkit:build` | Builds project and generates node-webkit app
-`webkit:build:dirty` | Generates node-webkit app with contents of dist without building
-
-
+`webkit:build:copy` | Generates node-webkit app with contents of dist without building
 
 ### Cordova
 

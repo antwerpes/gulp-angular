@@ -9,9 +9,9 @@ module.exports = (gulp, $) ->
 	config.files = 'dist/**/**'
 
 	gulp.task 'webkit:build', ['core:build'], ->
-		gulp.start 'webkit:build:dirty'
+		gulp.start 'webkit:build:copy-dist'
 
-	gulp.task 'webkit:build:dirty', ->
+	gulp.task 'webkit:build:copy-dist', ->
 		new $.nodeWebkitBuilder config
 			.on 'log', console.log
 			.build().then ->
