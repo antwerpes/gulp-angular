@@ -107,7 +107,6 @@ module.exports = (gulp, $) ->
 			# Concatenate asset files referenced in <!-- build:* -->
 			# and postprocess resulting compound css and js files:
 			.pipe concatenatedAssetsFilter = $.useref.assets searchPath: ['dist']
-				.pipe require('gulp-debug')()
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()
