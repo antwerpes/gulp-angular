@@ -126,7 +126,7 @@ TODO work in progress
 Task | Description
 ---- | -----------
 `webkit:build` | Builds project and generates node-webkit app
-`webkit:build:copy` | Generates node-webkit app with contents of dist without building
+`webkit:build:copy-dist` | Generates node-webkit app with contents of dist without building
 
 ### Cordova
 
