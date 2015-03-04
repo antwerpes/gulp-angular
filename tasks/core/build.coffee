@@ -12,9 +12,19 @@ module.exports = (gulp, $) ->
 
 	# Copies fonts from src to dist, including those found in bower components.
 	gulp.task 'core:build:assets', ['core:bowerAssets:copy:dist'], ->
-		gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!src/bower_components/**']
+		# copy all files other than those handled by useref and inject to dist
+		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!src/bower_components/**']
 			.pipe $.changed 'dist'
-			.pipe gulp.dest('dist')
+			.pipe gulp.dest 'dist'
+			.pipe $.size()
+
+		# copy all bower-main-files which are not js or css (i.e bootstrap fonts)
+		bowerMainFiles = gulp.src $.mainBowerFiles(), base: 'src'
+			.pipe $.ignore.exclude '**/*.{js,css}'
+			.pipe gulp.dest 'dist'
+			.pipe $.size()
+
+		return $.mergeStream ownFiles, bowerMainFiles
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
@@ -97,6 +107,7 @@ module.exports = (gulp, $) ->
 			# Concatenate asset files referenced in <!-- build:* -->
 			# and postprocess resulting compound css and js files:
 			.pipe concatenatedAssetsFilter = $.useref.assets searchPath: ['dist']
+				.pipe require('gulp-debug')()
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()

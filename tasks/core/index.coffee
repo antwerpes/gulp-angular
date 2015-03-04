@@ -36,9 +36,10 @@ $ =
 	revReplace:        require 'gulp-rev-replace'
 	fs:                require 'fs'
 	mergeStream:			 require 'merge-stream'
+	ignore:						 require 'gulp-ignore'
 
 try $.sass = require 'gulp-sass'
-catch e 
+catch e
 	console.warn 'sass not available'
 	$.sass = $.util.noop
 

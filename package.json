@@ -28,6 +28,7 @@
     "gulp-filter": "^2.0.0",
     "gulp-ftp": "^1.0.1",
     "gulp-if": "^1.2.5",
+    "gulp-ignore": "^1.2.1",
     "gulp-imagemin": "^2.2.1",
     "gulp-inject": "^1.0.2",
     "gulp-jade": "^1.0.0",
