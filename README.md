@@ -47,13 +47,13 @@ require('gulp-angular/tasks/cordova')(gulp);
 <!doctype html>
 <html>
   <head>
-	<!-- build:css({tmp,src}) styles/vendor.css -->
+	<!-- build:css styles/vendor.css -->
 		<!-- bower:css -->
 			<!-- STYLES FROM BOWER_COMPONENTS WILL BE AUTOMATICALLY INJECTED HERE -->
 		<!-- endbower -->
 	<!-- endbuild -->
 
-	<!-- build:css({tmp,src}) styles/main.css -->
+	<!-- build:css styles/main.css -->
 		<!-- inject:styles -->
 			<!-- OWN STYLES WILL BE AUTOMATICALLY INJECTED HERE -->
 		<!-- endinject -->
@@ -81,10 +81,9 @@ require('gulp-angular/tasks/cordova')(gulp);
 ##### /gulpfile.js
 ```js
 var gulp = require('gulp');
-var config = {}
 var packageJson = require('./package.json');
 
-require('gulp-angular')(gulp, config, packageJson);
+require('gulp-angular')(gulp, packageJson);
 ```
 
 ##### /.bowerrc
@@ -121,6 +120,25 @@ Task | Description
 #### Prerequisites
 TODO work in progress
 - /src/package.json in with `main: "index.html"`
+
+##### /package.json (example)
+```json
+{
+	...
+	"gulp-angular": {
+		"webkit": {
+		  "version": "v0.11.6",
+		  "platforms": ["osx64"],
+		  "window": {
+		    "frame": false,
+		    "toolbar": true,
+		    "platforms": "osx64"
+		  }
+		}
+		...	
+	}
+}
+```
 - configuration in /package.json/gulp-angular-config/webkit (see options in https://github.com/mllrsohn/node-webkit-builder)
 
 Task | Description
@@ -137,34 +155,45 @@ Task | Description
 - Existence of gulp-angular-config.js file in the root of your project (see below).
 - Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files (see below).
 
+##### /package.json (example)
+```json
+{
+	...
+	"gulp-angular": {
+		"cordova": {
+			"build": {
+				"appName": "", /* same value as the <name> field inside config.xml */
+				"ftp": { /* used to publish ipa and apk files to an FTP server */
+					"hostname": "",
+					"username": "",
+					"password": "",
+					"directory": ""
+				},
+				"ios": { /* used for building signed ipa files */
+					"provisioningProfile": "" /* name as it appears in Xcode build settings */
+				},
+				"android": { /* used for building signed apk files */
+					"sign": [ /* text will be copied into platforms/android/ant.properties */
+						"key.store=", /* path to exported keystore file */
+						"key.store.password=",
+						"key.alias=",
+						"key.alias.password="
+					]
+				}
+			}
+		},
+		...
+	}
+}
+```
+
+
 ##### /gulpfile.js
 ```js
 var gulp = require('gulp');
-var config = {
-	...
-	appName: '', /* same value as the <name> field inside config.xml */
-	ftp: { /* used to publish ipa and apk files to an FTP server */
-		hostname: '',
-		username: '',
-		password: '',
-		directory: ''
-	},
-	ios: { /* used for building signed ipa files */
-		provisioningProfile: '' /* name as it appears in Xcode build settings */
-	},
-	android: { /* used for building signed apk files */
-		sign: [ /* text will be copied into platforms/android/ant.properties */
-			'key.store=', /* path to exported keystore file */
-			'key.store.password=',
-			'key.alias=',
-			'key.alias.password='
-		]
-	},
-	...
-}
 var packageJson = require('./package.json');
 
-require('gulp-angular')(gulp, config, packageJson);
+require('gulp-angular')(gulp, packageJson);
 ```
 
 ##### /hooks/after_platform_add/configure_android_keys.js

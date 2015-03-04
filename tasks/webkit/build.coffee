@@ -1,5 +1,5 @@
 module.exports = (gulp, $) ->
-	config = $.packageJson['gulp-angular-config']?['webkit'] or {}
+	config = $.packageJson['gulp-angular']?['webkit'] or {}
 	# see config options in https://github.com/mllrsohn/node-webkit-builder
 	config.appName = $.packageJson.name
 	config.apVersion = $.packageJson.version

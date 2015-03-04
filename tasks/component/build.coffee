@@ -28,5 +28,5 @@ module.exports = (gulp, $) ->
 			.pipe $.concat 'main.js'
 			.pipe gulp.dest 'dist'
 
-	gulp.task 'component:build', ['component:clean'], (cb) ->
+	gulp.task 'component:build', ['core:clean'], (cb) ->
 		gulp.start('component:build-dirty')

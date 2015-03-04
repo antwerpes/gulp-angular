@@ -43,8 +43,7 @@ catch e
 	console.warn 'sass not available'
 	$.sass = $.util.noop
 
-module.exports = (gulp, config, packageJson) ->
-	$.config = config
+module.exports = (gulp, packageJson) ->
 	$.packageJson = packageJson
 	$.runSequence = require('run-sequence').use(gulp)
 	require(task)(gulp, $) for task in [

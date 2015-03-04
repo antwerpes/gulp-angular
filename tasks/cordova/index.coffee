@@ -4,7 +4,8 @@ $ =
 	ftp:    require 'gulp-ftp'
 	util:   require 'gulp-util'
 
-module.exports = (gulp) ->
+module.exports = (gulp, packageJson) ->
+	$.packageJson = packageJson
 	require(task)(gulp, $) for task in [
 		'./init-destroy'
 		'./clean'

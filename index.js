@@ -1,4 +1,4 @@
-module.exports = function (gulp, config, packageJson) {
+module.exports = function (gulp, packageJson) {
 	require('coffee-script/register');
-	require('./index.coffee')(gulp, config, packageJson);
+	require('./index.coffee')(gulp, packageJson);
 }
