@@ -51,6 +51,7 @@
     "lazypipe": "^0.2.2",
     "main-bower-files": "^2.5.0",
     "merge-stream": "^0.1.7",
+    "node-webkit-builder": "^1.0.10",
     "run-sequence": "git://github.com/antwerpes/run-sequence",
     "uglify-save-license": "^0.4.1",
     "wiredep": "^2.2.0"

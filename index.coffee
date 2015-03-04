@@ -3,4 +3,5 @@ module.exports = (gulp, config, packageJson) ->
 		'./tasks/core'
 		'./tasks/component'
 		'./tasks/cordova'
+		'./tasks/webkit'
 	]
