@@ -29,7 +29,7 @@ module.exports = (gulp, $) ->
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
-		
+
 		$.gracefulChokidar.watch 'src',
 				ignored: /bower_components|^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
 				ignoreInitial: yes
@@ -41,3 +41,12 @@ module.exports = (gulp, $) ->
 				switch $.path.extname path
 					when '.html', '.js'	then $.browserSync.reload()
 					else $.browserSync.reload path
+		# chokidar doenst accept an array as first parameter, so we need to start the watcher on nothing and use the add function.
+		$.gracefulChokidar.watch '!**/*',
+				ignoreInitial: yes
+				persistent: yes
+			.add $.mainBowerFiles()
+			.on 'change', (path)->
+				switch $.path.extname path
+					when '.js', '.css' then gulp.start('core:inject')
+
