@@ -35,6 +35,7 @@ $ =
 	rev:               require 'gulp-rev'
 	revReplace:        require 'gulp-rev-replace'
 	fs:                require 'fs'
+	mergeStream:			 require 'merge-stream'
 
 try $.sass = require 'gulp-sass'
 catch e 
@@ -52,4 +53,5 @@ module.exports = (gulp, config, packageJson) ->
 		'./watch'
 		'./serve'
 		'./build'
+		'./bower-assets'
 	]

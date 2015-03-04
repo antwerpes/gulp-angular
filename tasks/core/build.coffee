@@ -2,6 +2,7 @@ module.exports = (gulp, $) ->
 	# Optimizes and copies images from src to dist, ignoring images found in bower components.
 	gulp.task 'core:build:images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/bower_components/**']
+			.pipe $.changed 'dist'
 			.pipe $.imagemin
 				optimizationLevel: 3
 				progressive: yes
@@ -10,13 +11,10 @@ module.exports = (gulp, $) ->
 			.pipe $.size()
 
 	# Copies fonts from src to dist, including those found in bower components.
-	gulp.task 'core:build:fonts', ->
-		bowerFonts = gulp.src $.mainBowerFiles(), base: 'src'
-			.pipe $.filter '**/*.{otf,eot,svg,ttf,woff}'
-		myFonts = gulp.src ['src/**/*.{otf,eot,svg,ttf,woff}', '!src/bower_components/**']
-		$.merge bowerFonts, myFonts
-			.pipe gulp.dest 'dist'
-			.pipe $.size()
+	gulp.task 'core:build:assets', ['core:bowerAssets:copy:dist'], ->
+		gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!src/bower_components/**']
+			.pipe $.changed 'dist'
+			.pipe gulp.dest('dist')
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
@@ -134,4 +132,5 @@ module.exports = (gulp, $) ->
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
 	gulp.task 'core:build', (cb) ->
-		$.runSequence 'core:clean', ['core:inject', 'core:build:images', 'core:build:fonts', 'core:build:partials'], 'core:build-build', 'core:build-cleanup', cb
+		$.runSequence 'core:clean', ['core:inject', 'core:build:images', 'core:build:assets', 'core:build:partials'], 'core:build-build', 'core:build-cleanup', cb
+
