@@ -1,4 +1,7 @@
 module.exports = (gulp, $) ->
+	# TODO allow subdirectory
+	return
+
 	ftpConfig =
 		host: $.ftp.hostname
 		user: $.ftp.username

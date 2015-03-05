@@ -27,7 +27,7 @@ module.exports = (gulp, $) ->
 			.pipe $.coffeelint()
 			.pipe $.coffeelint.reporter()
 			.pipe $.coffee sourceMap: false
-				.on 'error', $.handleStreamError
+			.on 'error', $.handleStreamError
 			.pipe gulp.dest 'tmp'
 			.pipe $.browserSync.reload stream: yes
 			.pipe $.size()
@@ -44,4 +44,4 @@ module.exports = (gulp, $) ->
 
 	# Transpiles styles and scripts from src to tmp.
 	gulp.task 'core:transpile', ['core:transpile:styles', 'core:transpile:scripts', 'core:transpile:templates']
-	
+

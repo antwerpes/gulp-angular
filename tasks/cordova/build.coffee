@@ -2,8 +2,7 @@
 
 module.exports = (gulp, $) ->
 	appName = $.packageJson['gulp-angular']?.cordova?.build?.appName
-	appName = $.packageJson['gulp-angular']?.cordova?.build?.provisioningProfile
-
+	path = $.packageJson['gulp-angular']?.cordova?.build?.path
 	# Builds a production-/distribution-ready iOS
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.
@@ -14,8 +13,15 @@ module.exports = (gulp, $) ->
 	# - Signs the app with the provisioning profile named
 	#   in `config.ios.provisioningProfile`.
 	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb)->
+		provisioningProfile = $.packageJson['gulp-angular']?.cordova?.build?.ios?.provisioningProfile
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
+			return cb()
+		unless $.fs.existsSync(path)
+			$.util.log 'the given path doens\'t exist. make sure "path" points to a cordova project directory'
+			return cb()
+		unless path
+			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
 			return cb()
 		gulp.src('').pipe $.shell [
 			'mkdir -p release'
@@ -26,7 +32,7 @@ module.exports = (gulp, $) ->
 			'mv platforms/ios/' + appName + '.xcarchive release/'
 			'mv platforms/ios/' + appName + '.ipa release/'
 			#'ipa info release/' + appName + '.ipa' # outputs a nice overview, but requires shenzhen to be installed
-		]
+		], cwd: path
 
 	# Builds a production-/distribution-ready Android
 	# app (.apk file) into the release directory.
@@ -36,12 +42,14 @@ module.exports = (gulp, $) ->
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
 			return cb()
-
+		unless path
+			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
+			return cb()
 		gulp.src('').pipe $.shell [
 			'cordova build android --release'
 			'mkdir -p release'
 			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + appName + '.apk'
-		]
+		], cwd: path
 
 	# Builds production-/distribution-ready iOS
 	# and Android apps into the release directory.
