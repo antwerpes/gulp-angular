@@ -15,7 +15,7 @@ module.exports = (gulp, $) ->
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) -> gulp.start 'core:inject'
-			.on 'error', (error) -> console.error('Error happened', error)
+			.on 'error', $.handleStreamError
 			.on 'unlink', (path) ->
 				tmpFile = path.replace /^src/, 'tmp'
 					.replace /\.less$/, 'css'
@@ -35,7 +35,7 @@ module.exports = (gulp, $) ->
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) -> gulp.start 'core:inject'
-			.on 'error', (error) -> console.error('Error happened', error)
+			.on 'error', $.handleStreamError
 			.on 'unlink', (path) -> gulp.start 'core:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path

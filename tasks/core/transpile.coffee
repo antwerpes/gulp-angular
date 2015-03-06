@@ -24,6 +24,7 @@ module.exports = (gulp, $) ->
 		gulp.src ['src/**/*.coffee', '!src/bower_components/**']
 			.pipe $.changed 'tmp', extension: '.js' # keep traffic low (important for watch task)
 			.pipe $.ngClassify appName: $.packageJson.name
+			.on 'error', $.handleStreamError
 			.pipe $.coffeelint()
 			.pipe $.coffeelint.reporter()
 			.pipe $.coffee sourceMap: false
