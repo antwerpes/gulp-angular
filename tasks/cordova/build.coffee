@@ -2,11 +2,13 @@
 
 module.exports = (gulp, $) ->
 	path = $.packageJson['gulp-angular']?.cordova?.build?.path
-	configXMLAbsolutePath = $.path.join process.cwd(), path, 'config.xml'
-	configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
-	appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
+	if path? #in case cordova is not configured in package.json
+
+		configXMLAbsolutePath = $.path.join process.cwd(), path, 'config.xml'
+		configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
+		if configXML? #in case there is no config.xml
+			appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
 	
-	#TODO: either read appName from config.xml or write it there
 	# Builds a production-/distribution-ready iOS
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.
