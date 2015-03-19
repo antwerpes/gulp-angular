@@ -152,8 +152,14 @@ Task | Description
 
 - If used together with the core module, make the cordova www directory a symlink to the dist directory.
 - Your project needs to be a valid cordova project that has a config.xml file, www and hooks directories.
-- Existence of gulp-angular-config.js file in the root of your project (see below).
 - Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files (see below).
+
+##### Setup the Cordova Project
+```bash
+cordova create path/to/cordova de.bundle.identifier appname
+```
+
+the '.' is important as it will make the current project a cordova app 
 
 ##### /package.json (example)
 ```json
@@ -232,3 +238,14 @@ Task | Description
 `cordova:deploy` | Uploads .ipa and .apk files found in the release directory to an FTP server location that must be specified in gulp-angular-config.js. Depends on `cordova:deploy:ios`, `cordova:deploy:android`.
 `cordova:run:ios` | Runs the iOS platform project on the currently plugged-in device. Requires 'ios-deploy' node module to be installed globally.
 `cordova:run:android` | Runs the Android platform project on the currently plugged-in device.
+
+### Scaffolding
+
+Task | Description | Options
+---- | ----------- | -------
+`create:controller` | Generates a controller with tests and template | `--here`: the controller will be placed in your current working dir, `--jade` create a jade template instead of coffeescript
+`create:directive` | Generates a directive and template | see controller
+`create:service` | Generates a Service | `--here`: the service will be placed in your current working dir
+`create:factory` | Generates a Factory | see service
+`create:provider` | Generates a Provider | see service
+`create:filter` | Generates a Filter | see service
