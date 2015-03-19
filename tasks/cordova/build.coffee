@@ -5,8 +5,8 @@ module.exports = (gulp, $) ->
 	if path? #in case cordova is not configured in package.json
 
 		configXMLAbsolutePath = $.path.join process.cwd(), path, 'config.xml'
-		configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
-		if configXML? #in case there is no config.xml
+		if $.fs.existsSync(configXMLAbsolutePath)
+			configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
 			appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
 	
 	# Builds a production-/distribution-ready iOS
