@@ -5,6 +5,7 @@ $ =
 	util:   require 'gulp-util'
 	fs:			require 'fs'
 	path:		require 'path'
+	xml2json:	require 'xml2json'
 
 module.exports = (gulp, packageJson) ->
 	$.packageJson = packageJson

@@ -1,8 +1,12 @@
 # TODO: read cordova project name from config.xml instead of gulp-angular-config.js
 
 module.exports = (gulp, $) ->
-	appName = $.packageJson['gulp-angular']?.cordova?.build?.appName
 	path = $.packageJson['gulp-angular']?.cordova?.build?.path
+	configXMLAbsolutePath = $.path.join process.cwd(), path, 'config.xml'
+	configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
+	appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
+	
+	#TODO: either read appName from config.xml or write it there
 	# Builds a production-/distribution-ready iOS
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.
@@ -12,7 +16,7 @@ module.exports = (gulp, $) ->
 	#   must exactly match the cordova project name in config.xml.
 	# - Signs the app with the provisioning profile named
 	#   in `config.ios.provisioningProfile`.
-	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb)->
+	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb) ->
 		provisioningProfile = $.packageJson['gulp-angular']?.cordova?.build?.ios?.provisioningProfile
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
@@ -38,7 +42,7 @@ module.exports = (gulp, $) ->
 	# app (.apk file) into the release directory.
 	# Configuration of app signing must be performed separately
 	# e.g. via a custom after_platform_add cordova hook.
-	gulp.task 'cordova:build:android', ['cordova:clean:android'], (cb)->
+	gulp.task 'cordova:build:android', ['cordova:clean:android'], (cb) ->
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
 			return cb()
