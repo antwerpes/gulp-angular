@@ -29,14 +29,15 @@ module.exports = (gulp, $) ->
 		unless path
 			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
 			return cb()
+		uderscoredAppName = appName.replace(/\s+/g, '_')
 		gulp.src('').pipe $.shell [
 			'mkdir -p release'
 			'cordova prepare'
 			'cd platforms/ios; xcodebuild clean -project ' + appName + '.xcodeproj -configuration Release -alltargets'
 			'cd platforms/ios; xcodebuild archive -project ' + appName + '.xcodeproj -scheme ' + appName + ' -archivePath ' + appName + '.xcarchive'
 			'cd platforms/ios; xcodebuild -exportArchive -archivePath ' + appName + '.xcarchive -exportPath ' + appName + ' -exportFormat ipa -exportProvisioningProfile "' + provisioningProfile + '"'
-			'mv platforms/ios/' + appName + '.xcarchive release/'
-			'mv platforms/ios/' + appName + '.ipa release/'
+			'mv platforms/ios/' + appName + '.xcarchive release/' + uderscoredAppName + '.xcarchive'
+			'mv platforms/ios/' + appName + '.ipa release/' + uderscoredAppName + '.ipa'
 			#'ipa info release/' + appName + '.ipa' # outputs a nice overview, but requires shenzhen to be installed
 		], cwd: path
 
@@ -54,7 +55,7 @@ module.exports = (gulp, $) ->
 		gulp.src('').pipe $.shell [
 			'cordova build android --release'
 			'mkdir -p release'
-			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + appName + '.apk'
+			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + uderscoredAppName + '.apk'
 		], cwd: path
 
 	# Builds production-/distribution-ready iOS
