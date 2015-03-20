@@ -16,7 +16,7 @@ module.exports = (gulp, $) ->
 			'npm install'
 		], cwd: 'dist'
 
-	gulp.task 'webkit:build:copy-dist',['webkit:build:npminstall'], ->
+	gulp.task 'webkit:build:copy-dist', ['webkit:build:npminstall'], ->
 		new $.nodeWebkitBuilder config
 			.on 'log', console.log
 			.build().then ->
