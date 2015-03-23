@@ -84,9 +84,9 @@ module.exports = (gulp, $) ->
 					noconcat: yes
 					searchPath: ['tmp', 'src']
 				# Process files in tmp and src differently (different roots):
-				.pipe $.if /tmp.*css/, rebaseTmp()
-				.pipe $.if /src.*css/, rebaseSrc()
-				.pipe $.if '*.js', copyToDist()
+				.pipe $.if /tmp.*\.css$/, rebaseTmp()
+				.pipe $.if /src.*\.css$/, rebaseSrc()
+				.pipe $.if /.*\.js$/, copyToDist()
 			.pipe individualAssetsFilter.restore()
 			# Bring index.html back into the stream.
 			# Previous asset source files will keep staying around in the
