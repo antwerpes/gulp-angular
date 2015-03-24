@@ -33,6 +33,7 @@ module.exports = (gulp, $) ->
 
 	###
 		Stage 2, get source from tmp and optimize for distribution
+		TODO: fix Dist-assets, test everything
 	###
 
 	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
