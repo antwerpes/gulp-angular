@@ -7,15 +7,14 @@ module.exports = (gulp, $) ->
 	# we @import them over there and don't inject them here.
 	gulp.task 'core:inject', ['core:transpile', 'core:bowerAssets:copy'], ->
 		# sort js dependencies by modules and dependecies
-		jsSources = gulp.src(['{src,tmp}/**/*.js', '!src/bower_components/**', '!**/*{test,e2e,partial}.js'])
+		jsSources = gulp.src(['{src,tmp}/**/*.js', '!**/*{test,e2e,partial}.js'], nodir:yes)
 			.pipe($.angularFileSort())
 
-		cssSources = gulp.src(['{src,tmp}/**/*.css', '!src/bower_components/**'], read: no)
+		cssSources = gulp.src(['{src,tmp}/**/*.css'], read: no, nodir: yes)
 
 		gulp.src 'src/index.html'
 			.pipe $.wiredep.stream
-				directory: 'src/bower_components'
-				exclude: 'bootstrap/*.css'
+				directory: './bower_components'
 			.pipe $.inject cssSources,
 				starttag: '<!-- inject:styles -->'
 				addRootSlash: no

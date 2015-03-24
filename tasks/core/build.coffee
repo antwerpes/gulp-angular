@@ -1,7 +1,43 @@
 module.exports = (gulp, $) ->
-	# Optimizes and copies images from src to dist, ignoring images found in bower components.
+
+	###
+		Stage 1, Build everything and make a functional Version of the app in tmp
+	###
+
+	gulp.task 'core:build:images:dev', ->
+		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
+			.pipe $.changed 'tmp'
+			.pipe gulp.dest 'tmp'
+			.pipe $.size()
+
+	gulp.task 'core:build:copy-sources:dev', () ->
+		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
+			.pipe gulp.dest('tmp')
+
+	gulp.task 'core:build:assets:dev', ['core:bowerAssets:copy'], ->
+		# copy all files other than those handled by useref and inject to dist
+		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}']
+			.pipe $.changed 'tmp'
+			.pipe gulp.dest 'tmp'
+			.pipe $.size()
+
+		# copy all bower-main-files
+		bowerMainFiles = gulp.src $.mainBowerFiles(), base: './'
+			.pipe $.changed 'tmp'
+			.pipe gulp.dest 'tmp'
+			.pipe $.size()
+
+		return $.mergeStream ownFiles, bowerMainFiles
+
+	gulp.task 'core:build:dev', ['core:inject', 'core:build:assets:dev', 'core:build:images:dev', 'core:build:copy-sources:dev']
+
+	###
+		Stage 2, get source from tmp and optimize for distribution
+	###
+
+	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
 	gulp.task 'core:build:images', ->
-		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/bower_components/**']
+		gulp.src ['tmp/**/*.{png,jpg,gif,svg,ico}',  '!tmp/bower_components/**/*']
 			.pipe $.changed 'dist'
 			.pipe $.imagemin
 				optimizationLevel: 3
@@ -10,34 +46,42 @@ module.exports = (gulp, $) ->
 			.pipe gulp.dest 'dist'
 			.pipe $.size()
 
-	# Copies fonts from src to dist, including those found in bower components.
-	gulp.task 'core:build:assets', ['core:bowerAssets:copy:dist'], ->
-		# copy all files other than those handled by useref and inject to dist
-		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!src/bower_components/**']
-			.pipe $.changed 'dist'
-			.pipe gulp.dest 'dist'
-			.pipe $.size()
+	# Copies all assets from tmp to dist
+	gulp.task 'core:build:assets', ->
+		 	# copy all files other than those handled by useref and inject to dist
+	 	ownFiles = gulp.src ['tmp/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!tmp/bower_components/**']
+	 		.pipe $.changed 'dist'
+	 		.pipe gulp.dest 'dist'
+	 		.pipe $.size()
 
 		# copy all bower-main-files which are not js or css (i.e bootstrap fonts)
-		bowerMainFiles = gulp.src $.mainBowerFiles(), base: 'src'
-			.pipe $.ignore.exclude '**/*.{js,css}'
-			.pipe gulp.dest 'dist'
-			.pipe $.size()
+	 	bowerMainFiles = gulp.src $.mainBowerFiles(), base: 'src'
+	 		.pipe $.ignore.exclude '**/*.{js,css}'
+	 		.pipe gulp.dest 'dist'
+	 		.pipe $.size()
 
-		return $.mergeStream ownFiles, bowerMainFiles
+	 	return $.mergeStream ownFiles, bowerMainFiles
+
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
-	gulp.task 'core:build:partials', ['core:transpile:templates'], ->
-		gulp.src ['src/**/*.html', 'tmp/**/*.html', '!src/index.html', '!src/bower_components/**']
+	gulp.task 'core:build:partials', (cb)->
+		$.runSequence('core:build:create-partials', 'core:build:remove-html', cb)
+
+	gulp.task 'core:build:create-partials', ->
+		gulp.src ['tmp/**/*.html', '!tmp/index.html']
 			.pipe $.minifyHtml
 				empty: yes
 				spare: yes
 				quotes: yes
 			.pipe $.ngHtml2js moduleName: $.packageJson.name
 			.pipe $.rename suffix: '.partial'
-			.pipe gulp.dest 'dist'
+			.pipe gulp.dest 'tmp'
 			.pipe $.size()
+
+	gulp.task 'core:build:remove-html', (cb)->
+		$.del ['tmp/**/*.html', '!tmp/index.html'], cb
+
 
 	# When building a production-/distribution-ready version of the
 	# web app, all html, css and js files being present
@@ -60,21 +104,19 @@ module.exports = (gulp, $) ->
 	#    tmp/index.html (within <!-- build:js --> blocks)
 	#    to dist, leaving their content untouched.
 	# TODO: check how absolute paths are being rebased
-	gulp.task 'core:build-prepare', ['core:transpile:styles', 'core:transpile:scripts'], ->
+	gulp.task 'core:build:dist', ['core:build:partials'], ->
 		# Define reusable partial pipelines with lazypipe so
 		# that more than one operation can be performed in a $.if step.
 		# rebaseTmp and rebaseSrc lazypipes receive the stream of individual asset
 		# files filtered by $.if and process those files separately from
 		# the task's main stream and so that they can be written out independently.
-		copyToDist = $.lazypipe()
-			.pipe $.copy, 'dist', prefix: 1 # strips away the fist path component
-			.pipe gulp.dest, 'dist'
+		# copyToDist = $.lazypipe()
+		# 	.pipe $.copy, 'dist', prefix: 1 # strips away the fist path component
+		# 	.pipe gulp.dest, 'dist'
 		rebaseTmp = $.lazypipe()
 			.pipe $.cssretarget, root: 'tmp/styles' # later: dist/styles, but here tmp to not confuse the plugin
-			.pipe copyToDist
-		rebaseSrc = $.lazypipe()
-			.pipe $.cssretarget, root: 'src/styles' # later: dist/styles, but here src to not confuse the plugin
-			.pipe copyToDist
+			.pipe () -> return gulp.dest 'tmp'
+
 		gulp.src 'tmp/index.html'
 			# Read and pass asset references within <!-- build:* -->
 			# blocks into the stream for further processing.
@@ -82,31 +124,24 @@ module.exports = (gulp, $) ->
 			# the same across all build steps (see build:dist task):
 			.pipe individualAssetsFilter = $.useref.assets
 					noconcat: yes
-					searchPath: ['tmp', 'src']
+					searchPath: ['tmp']
 				# Process files in tmp and src differently (different roots):
 				.pipe $.if /tmp.*\.css$/, rebaseTmp()
-				.pipe $.if /src.*\.css$/, rebaseSrc()
-				.pipe $.if /.*\.js$/, copyToDist()
+				# .pipe $.if /.*\.js$/, copyToDist()
 			.pipe individualAssetsFilter.restore()
 			# Bring index.html back into the stream.
 			# Previous asset source files will keep staying around in the
 			# stream so ignore them to prevent writing them back!
 			# Write out index.html only:
 			.pipe $.filter 'index.html'
-			.pipe gulp.dest 'dist'
-
-	# Performs the actual minification and concatenation of html, css and js files,
-	# resulting in a production-/distribution-ready version of the web app in dist.
-	gulp.task 'core:build-build', ['core:build-prepare'], ->
-		gulp.src 'dist/index.html'
 			# Inject angular pre-cached partials into index.html:
-			.pipe $.inject gulp.src('dist/**/*.partial.js', read: no),
+			.pipe $.inject gulp.src('tmp/**/*.partial.js', read: no),
 				starttag: '<!-- inject:partials -->'
 				addRootSlash: no
-				ignorePath: ['dist'] # strips away the 'dist/' path component
+				ignorePath: ['tmp'] # strips away the 'dist/' path component
 			# Concatenate asset files referenced in <!-- build:* -->
 			# and postprocess resulting compound css and js files:
-			.pipe concatenatedAssetsFilter = $.useref.assets searchPath: ['dist']
+			.pipe concatenatedAssetsFilter = $.useref.assets searchPath: ['tmp']
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()
@@ -128,22 +163,10 @@ module.exports = (gulp, $) ->
 			.pipe gulp.dest 'dist'
 			.pipe $.size()
 
-	# Deletes those css and js files from dist that were generated by the core:build-prepare
-	# task and leaves the dist directory in a clean state without any remaining empty directories.
-	gulp.task 'core:build-cleanup', (cb) ->
-		$.del ['dist/**/*.{css,js}', '!dist/{styles,scripts,node_modules}/**'], ->
-			deleteEmptyDirectories = (dir) ->
-				for item in $.fs.readdirSync dir
-					filename = $.path.join dir, item
-					if $.fs.statSync(filename).isDirectory() then deleteEmptyDirectories filename
-				try $.fs.rmdirSync dir catch # suppress ENOTEMPTY exception
-			deleteEmptyDirectories 'dist'
-			cb()
-
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
 	gulp.task 'core:build', ['core:clean'], (cb)->
-		$.runSequence 'core:build:dirty', cb
-	
+		$.runSequence 'core:build:dev', 'core:build:images', 'core:build:assets', 'core:build:dist', cb
+
 	gulp.task 'core:build:dirty', ['core:inject', 'core:build:images', 'core:build:assets', 'core:build:partials'], (cb) ->
 		$.runSequence 'core:build-build', 'core:build-cleanup', cb
 
