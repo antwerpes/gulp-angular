@@ -5,7 +5,7 @@ module.exports = (gulp, $) ->
 	# being transpiled and injected into tmp/index.html.
 	# Counterparts in tmp of files being deleted from src are also being deleted
 	# with inject being triggered afterwards.
-	gulp.task 'core:watch', ['core:inject'], ->
+	gulp.task 'core:watch', ['core:build:dev'], ->
 		$.gracefulChokidar.watch 'bower.json',
 				ignoreInitial: yes
 				persistent: yes

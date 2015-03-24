@@ -9,7 +9,7 @@ module.exports = (gulp, $) ->
 			# 	'{tmp,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
 			# this is triggered manually to avoid having too many watches
 			server:
-				baseDir: ['tmp', 'src'] # order is important here! files in tmp have precedence
+				baseDir: ['tmp'] # order is important here! files in tmp have precedence
 			startPath: '/index.html'
 			browser: 'default'
 			open: no
