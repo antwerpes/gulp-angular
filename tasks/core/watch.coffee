@@ -9,7 +9,7 @@ module.exports = (gulp, $) ->
 		$.gracefulChokidar.watch 'bower.json',
 				ignoreInitial: yes
 				persistent: yes
-			.on 'change', -> gulp.start 'core:inject'
+			.on 'change', -> $.runSequence 'core:inject', 'core:build:assets:dev', () -> $.browserSync.reload()
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
