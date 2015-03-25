@@ -110,8 +110,10 @@ module.exports = (gulp, $) ->
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()
+				.pipe $.sourcemaps.init()
 				.pipe $.if '*.js', $.uglify
 					preserveComments: $.uglifySaveLicense
+				.pipe($.sourcemaps.write())
 				# Append a revision hash to the filename:
 				.pipe $.rev()
 			.pipe concatenatedAssetsFilter.restore()
