@@ -2,7 +2,7 @@ module.exports = (gulp, $) ->
 	# Transpiles less and sass files found in src into css files copied to tmp.
 	# Automatically adds vendor prefixes after transpilation.
 	gulp.task 'core:transpile:styles', ->
-		gulp.src ['src/**/*.{less,scss}', '!src/bower_components/**']
+		gulp.src ['src/**/*.{less,scss}']
 			.pipe $.changed 'tmp', extension: '.css' # keep traffic low (important for watch task)
 			.pipe($.if '*.less', $.less())
 				.on 'error', $.handleStreamError
@@ -21,7 +21,7 @@ module.exports = (gulp, $) ->
 	# Lints coffeescript and converts coffeescript classes to angular
 	# syntax (ng-classify) before transpilation. Sourcemaps are not supported yet.
 	gulp.task 'core:transpile:scripts', ->
-		gulp.src ['src/**/*.coffee', '!src/bower_components/**']
+		gulp.src ['src/**/*.coffee']
 			.pipe $.changed 'tmp', extension: '.js' # keep traffic low (important for watch task)
 			.pipe $.ngClassify appName: $.packageJson.name
 			.on 'error', $.handleStreamError
@@ -35,7 +35,7 @@ module.exports = (gulp, $) ->
 
 	# Transpiles jade files found in src into html files copied to tmp.
 	gulp.task 'core:transpile:templates', ->
-		gulp.src ['src/**/*.jade', '!src/bower_components/**']
+		gulp.src ['src/**/*.jade']
 			.pipe $.changed 'tmp', extension: '.html' # keep traffic low (important for watch task)
 			.pipe $.jade()
 			.on 'error', $.handleStreamError

@@ -5,7 +5,7 @@ module.exports = (gulp, $) ->
 	# <!-- inject:* --> blocks.
 	# Because we want to overwrite bootstrap styles in vendor.css,
 	# we @import them over there and don't inject them here.
-	gulp.task 'core:inject', ['core:transpile', 'core:bowerAssets:copy'], ->
+	gulp.task 'core:inject', ['core:transpile'], ->
 		# sort js dependencies by modules and dependecies
 		jsSources = gulp.src(['tmp/**/*.js', '!**/*{test,e2e,partial}.js', '!tmp/bower_components/**/*' ], nodir:yes)
 			.pipe($.angularFilesort())
@@ -14,7 +14,7 @@ module.exports = (gulp, $) ->
 
 		gulp.src 'src/index.html'
 			.pipe $.wiredep.stream
-				directory: 'bower_components'
+				ignorePath: /\.\.\//
 			.pipe $.inject cssSources,
 				starttag: '<!-- inject:styles -->'
 				addRootSlash: no

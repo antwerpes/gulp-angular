@@ -97,23 +97,30 @@ require('gulp-angular')(gulp, packageJson);
 
 Task | Description
 ---- | -----------
-`core:clean` | Deletes tmp and empties the dist directory leaving the directory itself intact so that symlinks pointing to it (e.g. cordova www) don't break.
+`core:clean:dist` | Deletes empties the dist directory leaving the directory itself intact so that symlinks pointing to it (e.g. cordova www) don't break.
+`core:clean:tmp` | Deletes tmp directory.
+`core:clean` | runs `core:clean:dist` and `core:clean:tmp`
 `core:transpile:styles` | Transpiles less and sass files found in src into css files copied to tmp. Automatically adds vendor prefixes after transpilation.
 `core:transpile:scripts` | Transpiles coffee files found in src into js files copied to tmp. Lints coffeescript and converts coffeescript classes to angular syntax (ng-classify) before transpilation. Sourcemaps are not supported yet.
-`core:transpile` | Transpiles styles and scripts from src to tmp. Depends on `core:transpile:styles` and `core:transpile:scripts`.
+`core:transpile:scripts` | Transpiles jade files found in src into html files copied to tmp.
+`core:transpile` | Transpiles styles and scripts from src to tmp. Depends on `core:transpile:styles`, `core:transpile:scripts` and `core:transpile:templates`
+
 `core:inject` | Injects file references of css and js files found in src and tmp into tmp/index.html. Copies src/index.html over to tmp while injecting references of css and js source files found in src and tmp into `<!-- inject:* -->` blocks. Because we want to overwrite bootstrap styles in vendor.css, we @import them over there and don't inject them here. Depends on `core:transpile`.
 `core:watch` | Watches bower.json and triggers inject when its content changes. Watches less, sass and coffeescript files in src (not bower components) and triggers retranspilation when their content changes. New files are being transpiled and injected into tmp/index.html. Counterparts in tmp of files being deleted from src are also being deleted with inject being triggered afterwards. Depends on `core:inject` and starts `core:transpile:styles`, `core:transpile:scripts`, `core:inject` when watcher triggers changes.
 `core:serve:browser-sync:dev` | Starts a local web server serving the development version of the web app. Serves files from both the tmp and the src directories. Files in tmp have precedence over those found in src, which is especially important in order to ensure that the injected version of index.html gets served.
 `core:serve:browser-sync:dist` | Starts a local web server serving the production-/distribution-ready version of the web app from the dist directory.
 `core:serve:dev` | Builds and serves a clean development version of the web app while watching for source file changes. Runs `core:clean`, `core:watch`, `core:serve:browser-sync:dev` in sequence.
 `core:serve:dist` | Starts a local web server serving the production-/distribution-ready version of the web app. Runs `core:build`, `core:serve:browser-sync:dist` in sequence.
-`core:build:images` | Optimizes and copies images from src to dist, ignoring images found in bower components.
-`core:build:fonts` | Copies fonts from src to dist, including those found in bower components.
-`core:build:partials` | Minifies and packages html templates/partials found in src into pre-cached angular template modules in dist.
-`core:build-prepare` | When building a production-/distribution-ready version of the web app, all html, css and js files being present in src and tmp need further processing. This pre-build task ensures that from now on, changes are being made on copies of the original files so that building dist has no side effect on files that are already present in src or have been generated into tmp for development purposes (e.g. we don't want partials to be injected into tmp/index.html, which would mess up `core:serve:dev`). The task does three things:<br />1) Copies index.html from tmp to dist.<br />2) Copies those css files that are referenced in tmp/index.html (within `<!--  build:css -->` blocks) to dist while rebasing all urls found in their css rules. Rebasing takes place with respect to the location of the final, concatenated css files that are yet to be generated in the following `core:build-build` task<br />3) Copies those js files that are referenced in tmp/index.html (within `<!-- build:js -->` blocks) to dist, leaving their content untouched.
+`core:build:images:dev` | Copy changed images from src to tmp
+`core:build:copy-source` | Copy js, css and html files from src to tmp
+`core:build:assets:dev` | Copy assets from src and main-bower-files to tmp
+`core:build:images` | Optimizes and copies images from tmp to dist.
+`core:build:assets` | Copy assets and main-bower-files from tmp to dist
+`core:build:dev` | Build a non-minified running version of the project in tmp
+`core:build:partials` | convert html files in tmp to angular javascript-templates, removes html files after that
 `core:build-build` | Performs the actual minification and concatenation of html, css and js files, resulting in a production-/distribution-ready version of the web app in dist. Depends on `core:build-prepare`.
 `core:build-cleanup` | Deletes those css and js files from dist that were generated by the `core:build-prepare` task and leaves the dist directory in a clean state without any remaining empty directories.
-`core:build` | Builds a production-/distribution-ready version of the web app into the dist directory. Runs `core:clean`, [`core:inject`, `core:build:images`, `core:build:fonts`, `core:build:partials` in parallel], `core:build-build`, `core:build-cleanup` in sequence.
+`core:build` | Builds a production-/distribution-ready version of the web app into the dist directory.
 
 ### Webkit
 

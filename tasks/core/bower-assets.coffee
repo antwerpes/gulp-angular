@@ -18,12 +18,4 @@ module.exports = (gulp, $) ->
 			return $.mergeStream.apply(null, streams)
 		else cb()
 
-	gulp.task 'core:bowerAssets:copy:dist', ()->
-		if $.packageJson['gulp-angular']?.core?.bowerAssets?.copy
-			streams = []
-			for pkg, assetsFolder of $.packageJson['gulp-angular']?.core?.bowerAssets?.copy
-				path = $.path.join 'src','bower_components',pkg,assetsFolder,'**','*'
-				streams.push gulp.src(path, cwd: '.').pipe gulp.dest $.path.join 'dist', assetsFolder
-			return $.mergeStream.apply(null, streams)
-
 

@@ -7,7 +7,7 @@ module.exports = (gulp, $) ->
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
 	gulp.task 'component:partials', ['core:transpile:templates'], ->
-		gulp.src ['src/**/*.html', 'tmp/**/*.html', '!src/bower_components/**']
+		gulp.src ['src/**/*.html', 'tmp/**/*.html']
 			.pipe $.minifyHtml
 				empty: yes
 				spare: yes
