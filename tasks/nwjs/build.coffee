@@ -7,7 +7,7 @@ module.exports = ({gulp, $, config}) ->
     when 'linux'
        if process.arch == 'x64' then 'linux64' else 'linux32'
 
-	devConfig = $.deepExtend(config, {})
+	devConfig = $.deepExtend({}, config)
 	devConfig.appName = devConfig.appName + '_dev'
 	devConfig.files = 'tmp/package.json'
 
@@ -24,7 +24,6 @@ module.exports = ({gulp, $, config}) ->
 			.on 'log', console.log
 			.build().then ->
 				console.log 'webkit done'
-				cb()
 			.catch (error) ->
 				console.error error
 
