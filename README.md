@@ -1,6 +1,6 @@
 # gulp-angular
 
-A collection of gulp tasks for developing angular applications.
+A collection of gulp tasks for developing angular applications and deploying them to the Web, Cordova and Node-Webkit containers.
 
 ## Installation
 
@@ -15,6 +15,7 @@ When consuming and developing it further:
 ```bash
 cd /path/to/projects/folder
 git clone git+ssh://git@github.com/antwerpes/gulp-angular.git
+cd gulp-angular
 npm link
 cd /path/to/project/using/gulp-angular
 echo add "gulp-angular": "git+ssh://git@github.com:antwerpes/gulp-angular" to devDependencies in package.json
@@ -23,24 +24,71 @@ npm link gulp-angular
 
 ## Usage
 
-Require all modules/task collections:
+You need to create your own gulpfile.js file and provide a config object. See `node_modules/gulp-angular gulp-angular and its config from there. 
 
+### path/to/your/app/gul-angular-config.json
+
+### path/to/your/app/gulpfile.js
 ```javascript
 var gulp = require('gulp');
-require('gulp-angular')(gulp);
+var gulpAngularConfig = require('./gulp-angular-config.json');
+require('gulp-angular')(gulp, gulpAngularConfig);
 ```
 
-Require a specific module/task collection selectively:
-```javascript
-var gulp = require('gulp');
-require('gulp-angular/tasks/cordova')(gulp);
-```
+#### Most used Tasks.
+Task | Description
+---- | -----------
+`web:serve` | Builds and serves a clean development version of the web app from `tmp/` while watching for source file changes to live-inject css or reload the app for template and script changes.
+`build` | Builds production-ready versions of the app for the Web, as iOS and Android Cordova Apps and as Node-Webkit App.
+`deploy` | Uploads the production ready Apps to ftp servers
+`build-and-deploy` | Builds and Uploads the production ready Apps to ftp servers. 
 
-## Modules/Task Collections
+##### Development
 
-### Core
+Task | Description
+---- | -----------
+`web:serve` | Builds and serves a clean development version of the web app from `tmp/` while watching for source file changes to live-inject css or reload the app for template and script changes.
+`web:serve:dist` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
+`nwjs:serve` | Analogous to `web:serve` but inside a Node-Webkit container.
+`nwjs:serve:dist` | Analogous to `web:serve:dist`
+`cordova:serve:ios` | Builds an iOS cordova app and updates the sources via `cordova prepare` when they change (App re-run is required to see changes)
+`cordova:serve:android` | Idem for Android
+`cordova:serve:dist:ios` | Idem but with a production-ready version
+`cordova:serve:dist:android` | For Android
 
-#### Prerequisites
+##### Build
+
+Task | Description
+---- | -----------
+`web:build` | Builds a clean production-ready version of the web app to dist/.
+`nwjs:build` | Idem but inside a Node-Webkit Container.
+`cordova:build` | Idem but inside a Cordova Container for both iOS and Android.
+`cordova:build:ios` | Idem but only iOS.
+`cordova:build:android` | Idem but only Android.
+`web:build` | Builds a clean production-ready version of the web app to dist/.
+`web:serve:dist` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
+`nwjs:serve` | Analogous to `web:serve` but inside a Node-Webkit container.
+`nwjs:serve:dist` | Analogous to `web:serve:dist`
+`cordova:serve:ios` | Builds a cordova app and updates the sources via `cordova prepare` when they change
+`cordova:serve:android` | Idem but on Android
+`cordova:serve:dist:ios` | Idem but with production ready-version
+`cordova:serve:dist:android` | Analogous to `web:serve:dist`
+
+### Scaffolding
+
+Task | Description | Options
+---- | ----------- | -------
+`create:app` | Generates all neccesary scaffolding for a new app
+`create:controller` | Generates a controller with tests and template | `--here`: the controller will be placed in your current working dir, `--jade` create a jade template instead of coffeescript
+`create:directive` | Generates a directive and template | see controller
+`create:service` | Generates a Service | `--here`: the service will be placed in your current working dir
+`create:factory` | Generates a Factory | see service
+`create:provider` | Generates a Provider | see service
+`create:filter` | Generates a Filter | see service
+
+
+-------------------------------------------------------------------------------
+#### Manual App Creation
 
 ##### /src/index.html:
 ```html
@@ -86,47 +134,7 @@ var packageJson = require('./package.json');
 require('gulp-angular')(gulp, packageJson);
 ```
 
-##### /.bowerrc
-```js
-{
-	"directory": "src/bower_components"
-}
-```
-
-#### Tasks
-
-Task | Description
----- | -----------
-`core:clean:dist` | Deletes empties the dist directory leaving the directory itself intact so that symlinks pointing to it (e.g. cordova www) don't break.
-`core:clean:tmp` | Deletes tmp directory.
-`core:clean` | runs `core:clean:dist` and `core:clean:tmp`
-`core:transpile:styles` | Transpiles less and sass files found in src into css files copied to tmp. Automatically adds vendor prefixes after transpilation.
-`core:transpile:scripts` | Transpiles coffee files found in src into js files copied to tmp. Lints coffeescript and converts coffeescript classes to angular syntax (ng-classify) before transpilation. Sourcemaps are not supported yet.
-`core:transpile:scripts` | Transpiles jade files found in src into html files copied to tmp.
-`core:transpile` | Transpiles styles and scripts from src to tmp. Depends on `core:transpile:styles`, `core:transpile:scripts` and `core:transpile:templates`
-
-`core:inject` | Injects file references of css and js files found in src and tmp into tmp/index.html. Copies src/index.html over to tmp while injecting references of css and js source files found in src and tmp into `<!-- inject:* -->` blocks. Because we want to overwrite bootstrap styles in vendor.css, we @import them over there and don't inject them here. Depends on `core:transpile`.
-`core:watch` | Watches bower.json and triggers inject when its content changes. Watches less, sass and coffeescript files in src (not bower components) and triggers retranspilation when their content changes. New files are being transpiled and injected into tmp/index.html. Counterparts in tmp of files being deleted from src are also being deleted with inject being triggered afterwards. Depends on `core:inject` and starts `core:transpile:styles`, `core:transpile:scripts`, `core:inject` when watcher triggers changes.
-`core:serve:browser-sync:dev` | Starts a local web server serving the development version of the web app. Serves files from both the tmp and the src directories. Files in tmp have precedence over those found in src, which is especially important in order to ensure that the injected version of index.html gets served.
-`core:serve:browser-sync:dist` | Starts a local web server serving the production-/distribution-ready version of the web app from the dist directory.
-`core:serve:dev` | Builds and serves a clean development version of the web app while watching for source file changes. Runs `core:clean`, `core:watch`, `core:serve:browser-sync:dev` in sequence.
-`core:serve:dist` | Starts a local web server serving the production-/distribution-ready version of the web app. Runs `core:build`, `core:serve:browser-sync:dist` in sequence.
-`core:build:images:dev` | Copy changed images from src to tmp
-`core:build:copy-source` | Copy js, css and html files from src to tmp
-`core:build:assets:dev` | Copy assets from src and main-bower-files to tmp
-`core:build:images` | Optimizes and copies images from tmp to dist.
-`core:build:assets` | Copy assets and main-bower-files from tmp to dist
-`core:build:dev` | Build a non-minified running version of the project in tmp
-`core:build:partials` | convert html files in tmp to angular javascript-templates, removes html files after that
-`core:build-build` | Performs the actual minification and concatenation of html, css and js files, resulting in a production-/distribution-ready version of the web app in dist. Depends on `core:build-prepare`.
-`core:build-cleanup` | Deletes those css and js files from dist that were generated by the `core:build-prepare` task and leaves the dist directory in a clean state without any remaining empty directories.
-`core:build` | Builds a production-/distribution-ready version of the web app into the dist directory.
-
 ### Webkit
-
-#### Prerequisites
-TODO work in progress
-- /src/package.json in with `main: "index.html"`
 
 ##### /package.json (example)
 ```json
@@ -146,7 +154,7 @@ TODO work in progress
 	}
 }
 ```
-- configuration in /package.json/gulp-angular-config/webkit (see options in https://github.com/mllrsohn/node-webkit-builder)
+- For options in nwjs builder (/package.json/gulp-angular-config/webkit) see options in https://github.com/mllrsohn/node-webkit-builder
 
 Task | Description
 ---- | -----------
@@ -246,13 +254,3 @@ Task | Description
 `cordova:run:ios` | Runs the iOS platform project on the currently plugged-in device. Requires 'ios-deploy' node module to be installed globally.
 `cordova:run:android` | Runs the Android platform project on the currently plugged-in device.
 
-### Scaffolding
-
-Task | Description | Options
----- | ----------- | -------
-`create:controller` | Generates a controller with tests and template | `--here`: the controller will be placed in your current working dir, `--jade` create a jade template instead of coffeescript
-`create:directive` | Generates a directive and template | see controller
-`create:service` | Generates a Service | `--here`: the service will be placed in your current working dir
-`create:factory` | Generates a Factory | see service
-`create:provider` | Generates a Provider | see service
-`create:filter` | Generates a Filter | see service
