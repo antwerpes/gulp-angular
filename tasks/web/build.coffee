@@ -4,19 +4,19 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	###
 
 	#	copy images to tmp
-	gulp.task 'core:build:images:dev', ->
+	gulp.task 'web:build:images:dev', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
 			.pipe $.changed 'tmp'
 			.pipe gulp.dest 'tmp'
 			.pipe $.size()
 
 	# copy all js, css and html files. those dont need to be touched in this phase
-	gulp.task 'core:build:copy-sources', () ->
+	gulp.task 'web:build:copy-sources', () ->
 		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
 			.pipe gulp.dest('tmp')
 
 	# copy all other assets and all bower-main-files to tmp
-	gulp.task 'core:build:assets:dev', ['core:copyBowerAssets'], ->
+	gulp.task 'web:build:assets:dev', ['web:copyBowerAssets'], ->
 		# copy all asset files
 		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}']
 			.pipe $.changed 'tmp'
@@ -32,14 +32,14 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		return $.mergeStream ownFiles, bowerMainFiles
 
 	# build the app to tmp
-	gulp.task 'core:build:dev', ['core:inject', 'core:build:assets:dev', 'core:build:images:dev', 'core:build:copy-sources']
+	gulp.task 'web:build:dev', ['web:inject', 'web:build:assets:dev', 'web:build:images:dev', 'web:build:copy-sources']
 
 	###
 		Stage 2: get source from tmp and optimize for distribution
 	###
 
 	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
-	gulp.task 'core:build:images', ->
+	gulp.task 'web:build:images', ->
 		gulp.src ['tmp/**/*.{png,jpg,gif,svg,ico}', '!tmp/bower_components/**/*']
 			.pipe $.changed 'dist'
 			.pipe $.imagemin
@@ -50,7 +50,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# Copies all assets from tmp to dist
-	gulp.task 'core:build:assets', ->
+	gulp.task 'web:build:assets', ->
 		# copy all files other than those handled by useref and inject to dist
 	 	ownFiles = gulp.src ['tmp/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!tmp/bower_components/**']
 	 		.pipe $.changed 'dist'
@@ -68,11 +68,11 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Minifies and packages html templates/partials found in tmp
 	# into pre-cached angular template modules in dist.
-	gulp.task 'core:build:partials', (cb)->
-		$.runSequence('core:build:create-partials', 'core:build:remove-html', cb)
+	gulp.task 'web:build:partials', (cb)->
+		$.runSequence('web:build:create-partials', 'web:build:remove-html', cb)
 
 	# create partials from html files
-	gulp.task 'core:build:create-partials', ->
+	gulp.task 'web:build:create-partials', ->
 		gulp.src ['tmp/**/*.html', '!tmp/index.html']
 			.pipe $.minifyHtml
 				empty: yes
@@ -84,18 +84,18 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# remove html files after creating the partial-js-files
-	gulp.task 'core:build:remove-html', (cb)->
+	gulp.task 'web:build:remove-html', (cb)->
 		$.del ['tmp/**/*.html', '!tmp/index.html'], cb
 
 	# rebase css urls to be relative to tmp/styles/
-	gulp.task 'core:build:rebase-css', ->
+	gulp.task 'web:build:rebase-css', ->
 		gulp.src ['tmp/**/*.css'], nodir: yes, base: 'tmp'
 			.pipe $.cssretarget
 				root: 'tmp/styles'
 			.pipe gulp.dest 'tmp'
 
 	# inject partials,
-	gulp.task 'core:build:dist', ->
+	gulp.task 'web:build:dist', ->
 		useSourcemaps = $.util.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
 		if useSourcemaps
 			console.warn $.chalk.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
@@ -132,12 +132,12 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
-	gulp.task 'core:build', ['core:clean'], (cb)->
-		$.runSequence 'core:build:dev',
-			'core:build:images',
-			'core:build:assets',
-			'core:build:rebase-css',
-			'core:build:partials',
-			'core:build:dist',
-			'core:clean:tmp',
+	gulp.task 'web:build', ['web:clean'], (cb)->
+		$.runSequence 'web:build:dev',
+			'web:build:images',
+			'web:build:assets',
+			'web:build:rebase-css',
+			'web:build:partials',
+			'web:build:dist',
+			'web:clean:tmp',
 			cb

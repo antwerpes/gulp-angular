@@ -3,7 +3,7 @@ module.exports =
 		doc: 'Name of your Main Angular-Module. Used for ng-annotate and Scaffolding'
 		format: '*'
 		default: null
-	core:
+	web:
 		copyBowerAssets:
 			doc: 'copy these folders from the bower component to dist. Expects an Object with the module as property and the directory as value'
 			format: (val) ->

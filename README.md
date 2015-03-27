@@ -165,7 +165,7 @@ Task | Description
 
 #### Prerequisites
 
-- If used together with the core module, make the cordova www directory a symlink to the dist directory.
+- If used together with the web module, make the cordova www directory a symlink to the dist directory.
 - Your project needs to be a valid cordova project that has a config.xml file, www and hooks directories.
 - Optionally a cordova hook script that runs 'after_platform_add' for configuring the android project to generate signed apk files (see below).
 

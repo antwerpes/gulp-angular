@@ -1,7 +1,7 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
 	# Transpiles less and sass files found in src into css files copied to tmp.
 	# Automatically adds vendor prefixes after transpilation.
-	gulp.task 'core:transpile:styles', ->
+	gulp.task 'web:transpile:styles', ->
 		gulp.src ['src/**/*.{less,scss}']
 			.pipe $.changed 'tmp', extension: '.css' # keep traffic low (important for watch task)
 			.pipe($.if '*.less', $.less())
@@ -20,7 +20,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Transpiles coffee files found in src into js files copied to tmp.
 	# Lints coffeescript and converts coffeescript classes to angular
 	# syntax (ng-classify) before transpilation. Sourcemaps are not supported yet.
-	gulp.task 'core:transpile:scripts', ->
+	gulp.task 'web:transpile:scripts', ->
 		gulp.src ['src/**/*.coffee']
 			.pipe $.changed 'tmp', extension: '.js' # keep traffic low (important for watch task)
 			.pipe $.ngClassify appName: globalConfig.angularModuleName
@@ -34,7 +34,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# Transpiles jade files found in src into html files copied to tmp.
-	gulp.task 'core:transpile:templates', ->
+	gulp.task 'web:transpile:templates', ->
 		gulp.src ['src/**/*.jade']
 			.pipe $.changed 'tmp', extension: '.html' # keep traffic low (important for watch task)
 			.pipe $.jade()
@@ -44,5 +44,5 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# Transpiles styles and scripts from src to tmp.
-	gulp.task 'core:transpile', ['core:transpile:styles', 'core:transpile:scripts', 'core:transpile:templates']
+	gulp.task 'web:transpile', ['web:transpile:styles', 'web:transpile:scripts', 'web:transpile:templates']
 

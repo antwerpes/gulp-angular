@@ -2,14 +2,14 @@ module.exports = ({gulp, $, config}) ->
 	# read the config for folders that need to be copied to the parent
 	# usage example in package.json:
 	# "gulp-angular": {
-	# 	"core": {
+	# 	"web": {
 	#			 "bowerAssets": {
 	#			 		"bootstrap": "fonts"
 	#			 }
 	#		}
 	# }
 	# will result in the bootstrap/fonts directory beeing copied to dist/fonts
-	gulp.task 'core:copyBowerAssets', (cb)->
+	gulp.task 'web:copyBowerAssets', (cb)->
 		if config.copyBowerAssets?
 			streams = []
 			for pkg, assetsFolder of config.copyBowerAssets

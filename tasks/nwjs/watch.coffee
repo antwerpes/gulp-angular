@@ -6,6 +6,6 @@ module.exports = ({gulp, $, config}) ->
 	# Counterparts in tmp of files being deleted from src are also being deleted
 	# with inject being triggered afterwards.
 	gulp.task 'nwjs:watch', ->
-		$.runSequence 'core:serve:dev', 'nwjs:build:dev'
+		$.runSequence 'web:serve:dev', 'nwjs:build:dev'
 
 

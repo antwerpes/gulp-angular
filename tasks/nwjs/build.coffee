@@ -11,7 +11,7 @@ module.exports = ({gulp, $, config}) ->
 	devConfig.appName = devConfig.appName + '_dev'
 	devConfig.files = 'tmp/package.json'
 
-	gulp.task 'nwjs:build', ['core:build'], (cb) ->
+	gulp.task 'nwjs:build', ['web:build'], (cb) ->
 		$.runSequence 'nwjs:build:copy-dist', cb
 
 	gulp.task 'nwjs:build:npm-install', () ->

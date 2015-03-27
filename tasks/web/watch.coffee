@@ -5,17 +5,17 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# being transpiled and injected into tmp/index.html.
 	# Counterparts in tmp of files being deleted from src are also being deleted
 	# with inject being triggered afterwards.
-	gulp.task 'core:watch', ['core:build:dev'], ->
+	gulp.task 'web:watch', ['web:build:dev'], ->
 		$.gracefulChokidar.watch 'bower.json',
 				ignoreInitial: yes
 				persistent: yes
-			.on 'change', -> $.runSequence 'core:inject', 'core:build:assets:dev', -> $.browserSync.reload()
+			.on 'change', -> $.runSequence 'web:inject', 'web:build:assets:dev', -> $.browserSync.reload()
 
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> $.runSequence 'core:inject'
+			.on 'add', (path) -> $.runSequence 'web:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) ->
 				tmpFile = path.replace /^src/, 'tmp'
@@ -24,9 +24,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					.replace /\.coffee$/, '.js'
 					.replace /\.jade$/, '.html'
 				$.del tmpFile
-				$.runSequence 'core:inject', 'core:build:assets:dev', -> $.browserSync.reload()
+				$.runSequence 'web:inject', 'web:build:assets:dev', -> $.browserSync.reload()
 			.on 'change', (path) ->
-				gulp.start 'core:transpile:' + switch $.path.extname path
+				gulp.start 'web:transpile:' + switch $.path.extname path
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
@@ -35,9 +35,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> gulp.start 'core:inject'
+			.on 'add', (path) -> gulp.start 'web:inject'
 			.on 'error', $.handleStreamError
-			.on 'unlink', (path) -> gulp.start 'core:inject'
+			.on 'unlink', (path) -> gulp.start 'web:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path
 					when '.html', '.js'	then $.browserSync.reload()
@@ -49,6 +49,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.add $.mainBowerFiles()
 			.on 'change', (path)->
 				switch $.path.extname path
-					when '.js', '.css' then gulp.start('core:inject')
+					when '.js', '.css' then gulp.start('web:inject')
 
 

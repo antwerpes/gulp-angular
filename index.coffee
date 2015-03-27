@@ -38,7 +38,7 @@ module.exports = (gulp, config) ->
 		return $.util.log 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'
 
 	require('./tasks/' + task)({gulp, $, config: conf.get(task), globalConfig}) for task in [
-		'core'
+		'web'
 		'component'
 		'cordova'
 		'nwjs'
