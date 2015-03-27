@@ -6,6 +6,8 @@ module.exports =
 	core:
 		copyBowerAssets:
 			doc: 'copy these folders from the bower component to dist. Expects an Object with the module as property and the directory as value'
+			format: (val) ->
+				return not val? or val is '[object Object]'
 			default: null
 	cordova:
 		path:

@@ -10,7 +10,7 @@ module.exports = ({gulp, $, config}) ->
 	# }
 	# will result in the bootstrap/fonts directory beeing copied to dist/fonts
 	gulp.task 'core:copyBowerAssets', (cb)->
-		if config.bowerAssets?.copy
+		if config.copyBowerAssets?
 			streams = []
 			for pkg, assetsFolder of config.copyBowerAssets
 				path = $.path.join 'bower_components',pkg,assetsFolder,'**','*'
