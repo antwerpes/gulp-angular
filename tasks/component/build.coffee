@@ -1,4 +1,4 @@
-module.exports = ({gulp, $, config}) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'component:assets', ->
 		gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade}']
 			.pipe $.changed 'dist'
