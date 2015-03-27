@@ -2,38 +2,28 @@
 
 A collection of gulp tasks for developing angular applications and deploying them to the Web, Cordova and Node-Webkit containers.
 
-## Installation
+## Getting Started
+To bootstrap a project using gulp-angular you need to take the following steps:
 
-When just consuming:
+- initialize a your Project as a node-module with `npm init`
+- install gulp and gulp-angular with `npm install --save-dev gulp && npm install --save-dev antwerpes/gulp-angular`
+- create a minimal gulpfile.js with the following contents:
 
-```bash
-npm install --save-dev antwerpes/gulp-angular
-```
-
-When consuming and developing it further:
-
-```bash
-cd /path/to/projects/folder
-git clone git+ssh://git@github.com/antwerpes/gulp-angular.git
-cd gulp-angular
-npm link
-cd /path/to/project/using/gulp-angular
-echo add "gulp-angular": "git+ssh://git@github.com:antwerpes/gulp-angular" to devDependencies in package.json
-npm link gulp-angular
-```
-
-## Usage
-
-You need to create your own gulpfile.js file and provide a config object. See `node_modules/gulp-angular gulp-angular and its config from there. 
-
-### path/to/your/app/gul-angular-config.json
-
-### path/to/your/app/gulpfile.js
 ```javascript
+'use strict';
+
 var gulp = require('gulp');
-var gulpAngularConfig = require('./gulp-angular-config.json');
+
+var gulpAngularConfig = {
+	// the module name is the only required parameter. 
+	// For more see config/config.example.json or config/gulp-angular.conf.coffee
+  "angularModuleName": 'MyApp' 
+}
+
 require('gulp-angular')(gulp, gulpAngularConfig);
 ```
+- run `gulp create:project` to generate the basic app structure
+- run `bower install` to install angular.js
 
 #### Most used Tasks.
 Task | Description
@@ -86,74 +76,6 @@ Task | Description | Options
 `create:provider` | Generates a Provider | see service
 `create:filter` | Generates a Filter | see service
 
-
--------------------------------------------------------------------------------
-#### Manual App Creation
-
-##### /src/index.html:
-```html
-<!doctype html>
-<html>
-  <head>
-	<!-- build:css styles/vendor.css -->
-		<!-- bower:css -->
-			<!-- STYLES FROM BOWER_COMPONENTS WILL BE AUTOMATICALLY INJECTED HERE -->
-		<!-- endbower -->
-	<!-- endbuild -->
-
-	<!-- build:css styles/main.css -->
-		<!-- inject:styles -->
-			<!-- OWN STYLES WILL BE AUTOMATICALLY INJECTED HERE -->
-		<!-- endinject -->
-	<!-- endbuild -->
-  </head>
-  <body>
-	<div ui-view class="rootView"></div>
-	<!-- build:js scripts/vendor.js -->
-		<!-- bower:js -->
-			<!-- SCRIPTS FROM BOWER_COMPONENTS WILL BE AUTOMATICALLY INJECTED HERE -->
-		<!-- endbower -->
-	<!-- endbuild -->
-
-	<!-- build:js scripts/main.js -->
-		<!-- inject:scripts -->
-			<!-- OWN SCRIPTS WILL BE AUTOMATICALLY INJECTED HERE -->
-		<!-- endinject -->
-		<!-- inject:partials -->
-			<!-- OWN ANGULAR TEMPLATES WILL BE AUTOMATICALLY INJECTED HERE -->
-		<!-- endinject -->
-	<!-- endbuild -->
-  </body>
-</html>
-```
-##### /gulpfile.js
-```js
-var gulp = require('gulp');
-var packageJson = require('./package.json');
-
-require('gulp-angular')(gulp, packageJson);
-```
-
-### Webkit
-
-##### /package.json (example)
-```json
-{
-	...
-	"gulp-angular": {
-		"webkit": {
-		  "version": "v0.11.6",
-		  "platforms": ["osx64"],
-		  "window": {
-		    "frame": false,
-		    "toolbar": true,
-		    "platforms": "osx64"
-		  }
-		}
-		...	
-	}
-}
-```
 - For options in nwjs builder (/package.json/gulp-angular-config/webkit) see options in https://github.com/mllrsohn/node-webkit-builder
 
 Task | Description
@@ -254,3 +176,13 @@ Task | Description
 `cordova:run:ios` | Runs the iOS platform project on the currently plugged-in device. Requires 'ios-deploy' node module to be installed globally.
 `cordova:run:android` | Runs the Android platform project on the currently plugged-in device.
 
+### Development
+
+```bash
+cd /path/to/projects/folder
+git clone git+ssh://git@github.com/antwerpes/gulp-angular.git
+cd gulp-angular
+npm link
+cd /path/to/project/using/gulp-angular
+npm link gulp-angular
+```

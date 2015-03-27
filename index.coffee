@@ -34,8 +34,9 @@ module.exports = (gulp, config) ->
 	conf.validate()
 
 	globalConfig = conf.get()
-	unless globalConfig.angularModuleName?
-		return $.util.log 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'
+
+	unless globalConfig.angularModuleName
+		return console.error $.chalk.bgRed.white 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'
 
 	require('./tasks/' + task)({gulp, $, config: conf.get(task), globalConfig}) for task in [
 		'web'

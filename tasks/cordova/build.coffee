@@ -5,8 +5,10 @@ module.exports = ({gulp, $, config}) ->
 	if $.fs.existsSync(configXMLAbsolutePath)
 		configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
 		appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
-
+	else
+		return
 	underscoredAppName = appName.replace(/\s+/g, '_')
+
 	# Builds a production-/distribution-ready iOS
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.

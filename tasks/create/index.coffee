@@ -1,5 +1,6 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
-	require('./'+task)({gulp, $, globalConfig}) for task in [
+	require('./'+task)({gulp, $, config, globalConfig}) for task in [
+		'project'
 		'directive'
 		'service'
 		'provider'
