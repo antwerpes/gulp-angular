@@ -15,6 +15,7 @@ module.exports = (gulp, config) ->
 			'merge-stream'
 			'deep-extend'
 			'convict'
+			'chalk'
 		]
 		config: path.join(__dirname, 'package.json')
 		scope: ['dependencies']

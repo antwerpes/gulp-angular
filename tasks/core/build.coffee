@@ -96,6 +96,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# inject partials,
 	gulp.task 'core:build:dist', ->
+		useSourcemaps = $.util.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
+		if useSourcemaps
+			console.warn $.chalk.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
 		gulp.src 'tmp/index.html'
 			# Inject angular pre-cached partials into index.html:
 			.pipe $.inject gulp.src('tmp/**/*.partial.js', read: no),
@@ -108,10 +111,10 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()
-				.pipe $.sourcemaps.init()
+				.pipe $.if useSourcemaps, $.sourcemaps.init()
 				.pipe $.if '*.js', $.uglify
 					preserveComments: $.uglifySaveLicense
-				.pipe($.sourcemaps.write())
+				.pipe $.if useSourcemaps, $.sourcemaps.write()
 				# Append a revision hash to the filename:
 				.pipe $.rev()
 			.pipe concatenatedAssetsFilter.restore()

@@ -9,6 +9,9 @@ module.exports =
 			format: (val) ->
 				return not val? or val is '[object Object]'
 			default: null
+		sourcemaps:
+			doc: 'Minified code will have sourcemaps'
+			default: no
 	cordova:
 		path:
 			doc: 'destination path for the cordova project'
