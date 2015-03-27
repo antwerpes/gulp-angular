@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config}) ->
 	# this might be used for bower_component development inside of another project
 	# the parent project will watch the main-files from the bower_component,
 	# so on change the watcher should build the dist-files, which are referenced in the bower.json

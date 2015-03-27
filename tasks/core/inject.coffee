@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config}) ->
 	# Injects file references of css and js files found in src and tmp into tmp/index.html.
 	# Copies src/index.html over to tmp while injecting references
 	# of css and js source files found in src and tmp into

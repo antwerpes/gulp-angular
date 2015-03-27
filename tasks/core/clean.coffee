@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config}) ->
 	# Deletes tmp and empties the dist directory leaving the directory itself
 	# intact so that symlinks pointing to it (e.g. cordova www) don't break.
 	gulp.task 'core:clean:dist', (cb) -> $.del ['dist/*'], cb

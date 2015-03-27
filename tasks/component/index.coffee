@@ -1,6 +1,5 @@
-module.exports = (gulp, packageJson, $) ->
-	$.packageJson = packageJson
-	require(task)(gulp, $) for task in [
-		'./build'
-		'./watch'
+module.exports = ({gulp, $, config, globalConfig}) ->
+	require('./'+task)({gulp, $, config: config?[task], globalConfig}) for task in [
+		'build'
+		'watch'
 	]

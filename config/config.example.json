@@ -1,0 +1,42 @@
+{
+    "angularModuleName": "myModule",
+    "nwjs": {
+        "appName": "My App",
+        "appVersion": "v1.0.0",
+        "macIcns": "src/icon.icns",
+        "winIco": "src/icon.ico",
+        "platforms": [
+            "osx64"
+        ],
+        "dev": {
+            "packageOverrides": {
+                "window": {
+                    "frame": true,
+                    "toolbar": true,
+                    "fullscreen": false
+                }
+            }
+        }
+    },
+    "cordova": {
+        "ios": {
+            "provisioningProfile": "My Provisioning Profile 2015"
+        },
+        "android": {
+            "sign": [
+                "key.store=../../secret/my.keystore",
+                "key.store.password=123456",
+                "key.alias=my-android-key",
+                "key.alias.password=654321"
+            ]
+        },
+        "deploy": {
+            "ftp": {
+                "host": "myhost.example.com",
+                "user": "ftpUser",
+                "pass": "ftpPassword",
+                "remotePath": "/var/www/myapp"
+            }
+        }
+    }
+}

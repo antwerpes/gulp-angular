@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'create:controller', ->
 		if not $.util.env.n or $.util.env.n is ''
 			$.util.log $.util.colors.red('Please give a name with -n')
@@ -16,13 +16,13 @@ module.exports = (gulp, $) ->
 
 		gulp.src($.path.join(__dirname, '../../templates/controller/template.controller.coffee'))
 		.pipe($.template(
-			appName: $.packageJson.name
+			appName: globalConfig.angularModuleName
 			name: cameledName + 'Controller'
 		))
 		.pipe($.rename(name + '.controller.coffee'))
 		.pipe gulp.dest(destPath)
 
-		if 'jade' of $.util.env
+		if ('jade' of $.util.env) or config.jade
 			gulp.src($.path.join(__dirname, '../../templates/controller/template.jade'))
 			.pipe($.template(name: cameledName + 'Controller'))
 			.pipe($.rename(name + '.jade'))
@@ -43,7 +43,7 @@ module.exports = (gulp, $) ->
 		.pipe gulp.dest(destPath)
 
 		gulp.src($.path.join(__dirname, '../../templates/controller/template.test.coffee'))
-		.pipe($.template(appName: $.packageJson.name))
+		.pipe($.template(appName: globalConfig.angularModuleName))
 		.pipe($.rename(name + '.test.coffee'))
 		.pipe gulp.dest(destPath)
 		return

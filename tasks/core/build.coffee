@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	###
 		Stage 1, transpile and copy everything and make a working version of the app in tmp
 	###
@@ -16,7 +16,7 @@ module.exports = (gulp, $) ->
 			.pipe gulp.dest('tmp')
 
 	# copy all other assets and all bower-main-files to tmp
-	gulp.task 'core:build:assets:dev', ['core:bowerAssets:copy'], ->
+	gulp.task 'core:build:assets:dev', ['core:copyBowerAssets'], ->
 		# copy all asset files
 		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}']
 			.pipe $.changed 'tmp'
@@ -78,7 +78,7 @@ module.exports = (gulp, $) ->
 				empty: yes
 				spare: yes
 				quotes: yes
-			.pipe $.ngHtml2js moduleName: $.packageJson.name
+			.pipe $.ngHtml2js moduleName: globalConfig.angularModuleName
 			.pipe $.rename suffix: '.partial'
 			.pipe gulp.dest 'tmp'
 			.pipe $.size()
@@ -108,8 +108,10 @@ module.exports = (gulp, $) ->
 				.pipe $.if '*.css', $.minifyCss
 					advanced: no # be friendly to old browsers
 				.pipe $.if '*.js', $.ngAnnotate()
+				.pipe $.sourcemaps.init()
 				.pipe $.if '*.js', $.uglify
 					preserveComments: $.uglifySaveLicense
+				.pipe($.sourcemaps.write())
 				# Append a revision hash to the filename:
 				.pipe $.rev()
 			.pipe concatenatedAssetsFilter.restore()

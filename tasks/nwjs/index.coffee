@@ -1,8 +1,6 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
+	console.log config
 	require('./'+task)({gulp, $, config, globalConfig}) for task in [
-		'init-destroy'
-		'clean'
 		'build'
-		'run'
-		'deploy'
+		'watch'
 	]

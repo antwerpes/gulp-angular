@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'create:service', ->
 		if not $.util.env.n or $.util.env.n is ''
 			$.util.log $.util.colors.red('Please give a name with -n')
@@ -15,7 +15,7 @@ module.exports = (gulp, $) ->
 
 		gulp.src($.path.join(__dirname, '../../templates/service/template.service.coffee'))
 		.pipe($.template(
-			appName: $.packageJson.name
+			appName: globalConfig.angularModuleName
 			cameledName: cameledName
 		))
 		.pipe($.rename(name + '.service.coffee'))

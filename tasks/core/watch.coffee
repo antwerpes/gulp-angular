@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	# Watches bower.json and triggers inject when its content changes.
 	# Watches less, sass and coffeescript files in src (not bower components)
 	# and triggers retranspilation when their content changes. New files are
@@ -9,21 +9,22 @@ module.exports = (gulp, $) ->
 		$.gracefulChokidar.watch 'bower.json',
 				ignoreInitial: yes
 				persistent: yes
-			.on 'change', -> $.runSequence 'core:inject', 'core:build:assets:dev', () -> $.browserSync.reload()
+			.on 'change', -> $.runSequence 'core:inject', 'core:build:assets:dev', -> $.browserSync.reload()
+
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> gulp.start 'core:inject'
+			.on 'add', (path) -> $.runSequence 'core:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) ->
 				tmpFile = path.replace /^src/, 'tmp'
-					.replace /\.less$/, 'css'
-					.replace /\.scss$/, 'css'
-					.replace /\.coffee$/, 'js'
-					.replace /\.jade$/, 'html'
+					.replace /\.less$/, '.css'
+					.replace /\.scss$/, '.css'
+					.replace /\.coffee$/, '.js'
+					.replace /\.jade$/, '.html'
 				$.del tmpFile
-				gulp.start 'core:inject'
+				$.runSequence 'core:inject', 'core:build:assets:dev', -> $.browserSync.reload()
 			.on 'change', (path) ->
 				gulp.start 'core:transpile:' + switch $.path.extname path
 					when '.less', '.scss'	then 'styles'
@@ -49,4 +50,5 @@ module.exports = (gulp, $) ->
 			.on 'change', (path)->
 				switch $.path.extname path
 					when '.js', '.css' then gulp.start('core:inject')
+
 

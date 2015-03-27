@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	# Starts a local web server serving the development version of the web app.
 	# Serves files from both the tmp and the src directories. Files in tmp
 	# have precedence over those found in src, which is especially important

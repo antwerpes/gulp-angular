@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config}) ->
 	gulp.task 'component:assets', ->
 		gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade}']
 			.pipe $.changed 'dist'
@@ -12,7 +12,7 @@ module.exports = (gulp, $) ->
 				empty: yes
 				spare: yes
 				quotes: yes
-			.pipe $.ngHtml2js moduleName: $.packageJson.name
+			.pipe $.ngHtml2js moduleName: globalConfig.angularModuleName
 			.pipe $.rename suffix: '.partial'
 			.pipe gulp.dest 'tmp'
 			.pipe $.size()

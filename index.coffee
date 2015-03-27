@@ -1,4 +1,4 @@
-module.exports = (gulp, packageJson) ->
+module.exports = (gulp, config) ->
 	path = require 'path'
 	$ = require('gulp-load-plugins')(
 		pattern: [
@@ -13,6 +13,8 @@ module.exports = (gulp, packageJson) ->
 			'lazypipe'
 			'uglify-save-license'
 			'merge-stream'
+			'deep-extend'
+			'convict'
 		]
 		config: path.join(__dirname, 'package.json')
 		scope: ['dependencies']
@@ -23,10 +25,21 @@ module.exports = (gulp, packageJson) ->
 	$.fs = require 'fs'
 	$.runSequence = require('run-sequence').use(gulp)
 	$.handleStreamError = require './helper/handle-stream-error'
-	require(task)(gulp, packageJson, $) for task in [
-		'./tasks/core'
-		'./tasks/component'
-		'./tasks/cordova'
-		'./tasks/webkit'
-		'./tasks/create'
+
+	conf = $.convict require './config/gulp-angular.conf'
+
+	conf.load(config)
+
+	conf.validate()
+
+	globalConfig = conf.get()
+	unless globalConfig.angularModuleName?
+		return $.util.log 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'
+
+	require('./tasks/' + task)({gulp, $, config: conf.get(task), globalConfig}) for task in [
+		'core'
+		'component'
+		'cordova'
+		'nwjs'
+		'create'
 	]

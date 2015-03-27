@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	# Transpiles less and sass files found in src into css files copied to tmp.
 	# Automatically adds vendor prefixes after transpilation.
 	gulp.task 'core:transpile:styles', ->
@@ -23,7 +23,7 @@ module.exports = (gulp, $) ->
 	gulp.task 'core:transpile:scripts', ->
 		gulp.src ['src/**/*.coffee']
 			.pipe $.changed 'tmp', extension: '.js' # keep traffic low (important for watch task)
-			.pipe $.ngClassify appName: $.packageJson.name
+			.pipe $.ngClassify appName: globalConfig.angularModuleName
 			.on 'error', $.handleStreamError
 			.pipe $.coffeelint()
 			.pipe $.coffeelint.reporter()
