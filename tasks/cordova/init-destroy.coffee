@@ -1,7 +1,7 @@
 # TODO: let cordova:init task generate gulp-angular-config.js (?)
 
-module.exports = (gulp, $) ->
-	path = $.packageJson['gulp-angular']?.cordova?.build?.path
+module.exports = ({gulp, $, config}) ->
+	path = config.path
 
 	# Generates Cordova iOS and Android platform projects
 	# by simply executing `cordova platform add ios and

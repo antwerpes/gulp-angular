@@ -1,10 +1,10 @@
-module.exports = (gulp, packageJson, $) ->
-	$.packageJson = packageJson
-	require(task)(gulp, $) for task in [
-		'./directive'
-		'./service'
-		'./provider'
-		'./factory'
-		'./filter'
-		'./controller'
+module.exports = ({gulp, $, config, globalConfig}) ->
+	require('./'+task)({gulp, $, config, globalConfig}) for task in [
+		'project'
+		'directive'
+		'service'
+		'provider'
+		'factory'
+		'filter'
+		'controller'
 	]

@@ -1,4 +1,4 @@
-module.exports = (gulp, $) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'create:directive', ->
 		if not $.util.env.n or $.util.env.n is ''
 			$.util.log $.util.colors.red('Please give a name with -n')
@@ -18,7 +18,7 @@ module.exports = (gulp, $) ->
 
 		gulp.src($.path.join(__dirname, '../../templates/directive/template.directive.coffee'))
 		.pipe($.template(
-			appName: $.packageJson.name
+			appName: globalConfig.angularModuleName
 			name: name
 			cameledName: cameledName
 			path: path
@@ -26,7 +26,7 @@ module.exports = (gulp, $) ->
 		.pipe($.rename(name + '.directive.coffee'))
 		.pipe gulp.dest(destPath)
 
-		if 'jade' of $.util.env
+		if 'jade' of $.util.env or config.jade
 			gulp.src($.path.join(__dirname, '../../templates/directive/template.jade'))
 			.pipe($.template(name: name))
 			.pipe($.rename(name + '.jade'))

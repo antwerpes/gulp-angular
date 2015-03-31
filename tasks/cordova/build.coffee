@@ -1,45 +1,41 @@
 # TODO: read cordova project name from config.xml instead of gulp-angular-config.js
 
-module.exports = (gulp, $) ->
-	path = $.packageJson['gulp-angular']?.cordova?.build?.path
-	if path? #in case cordova is not configured in package.json
+module.exports = ({gulp, $, config}) ->
+	configXMLAbsolutePath = $.path.join process.cwd(), config.path, 'config.xml'
+	if $.fs.existsSync(configXMLAbsolutePath)
+		configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
+		appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
+	else
+		return
+	underscoredAppName = appName.replace(/\s+/g, '_')
 
-		configXMLAbsolutePath = $.path.join process.cwd(), path, 'config.xml'
-		if $.fs.existsSync(configXMLAbsolutePath)
-			configXML = $.fs.readFileSync(configXMLAbsolutePath,'ascii')
-			appName = '"' + $.xml2json.toJson(configXML, object: yes).widget.name + '"'
-	
 	# Builds a production-/distribution-ready iOS
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.
-	# - Reads a `config` object from gulp-angular-config.js.
-	# - Takes `config.appName` as the base filename for output
-	#   files and for Xcode build scheme selection. This name
-	#   must exactly match the cordova project name in config.xml.
 	# - Signs the app with the provisioning profile named
 	#   in `config.ios.provisioningProfile`.
 	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb) ->
-		provisioningProfile = $.packageJson['gulp-angular']?.cordova?.build?.ios?.provisioningProfile
+		provisioningProfile = config.ios?.provisioningProfile
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
 			return cb()
-		unless $.fs.existsSync(path)
+		unless $.fs.existsSync(config.path)
 			$.util.log 'the given path doens\'t exist. make sure "path" points to a cordova project directory'
 			return cb()
-		unless path
+		unless config.path
 			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
 			return cb()
-		uderscoredAppName = appName.replace(/\s+/g, '_')
 		gulp.src('').pipe $.shell [
 			'mkdir -p release'
 			'cordova prepare'
 			'cd platforms/ios; xcodebuild clean -project ' + appName + '.xcodeproj -configuration Release -alltargets'
 			'cd platforms/ios; xcodebuild archive -project ' + appName + '.xcodeproj -scheme ' + appName + ' -archivePath ' + appName + '.xcarchive'
 			'cd platforms/ios; xcodebuild -exportArchive -archivePath ' + appName + '.xcarchive -exportPath ' + appName + ' -exportFormat ipa -exportProvisioningProfile "' + provisioningProfile + '"'
-			'mv platforms/ios/' + appName + '.xcarchive release/' + uderscoredAppName + '.xcarchive'
-			'mv platforms/ios/' + appName + '.ipa release/' + uderscoredAppName + '.ipa'
+			'mv platforms/ios/' + appName + '.xcarchive release/' + underscoredAppName + '.xcarchive'
+			'mv platforms/ios/' + appName + '.ipa release/' + underscoredAppName + '.ipa'
 			#'ipa info release/' + appName + '.ipa' # outputs a nice overview, but requires shenzhen to be installed
-		], cwd: path
+		], cwd: config.path
+
 
 	# Builds a production-/distribution-ready Android
 	# app (.apk file) into the release directory.
@@ -47,16 +43,21 @@ module.exports = (gulp, $) ->
 	# e.g. via a custom after_platform_add cordova hook.
 	gulp.task 'cordova:build:android', ['cordova:clean:android'], (cb) ->
 		unless appName
-			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
+			$.util.log 'no appName for building android given in config'
 			return cb()
-		unless path
-			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
+		unless config.path
+			$.util.log 'no path for building android given in config'
 			return cb()
+		unless config.android?.sign?
+			$.util.log 'no signing information for building android given in config'
+			return cb()
+
+		require('fs').writeFileSync $.path.join(config.path, 'platforms/android/ant.properties'), config.android.sign.join('\n')
 		gulp.src('').pipe $.shell [
 			'cordova build android --release'
 			'mkdir -p release'
-			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + uderscoredAppName + '.apk'
-		], cwd: path
+			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk'
+		], cwd: config.path
 
 	# Builds production-/distribution-ready iOS
 	# and Android apps into the release directory.

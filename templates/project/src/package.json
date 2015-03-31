@@ -1,0 +1,8 @@
+{
+  "name": "NWJS App",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {},
+  "main": "index.html"
+}
