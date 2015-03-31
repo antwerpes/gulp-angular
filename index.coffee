@@ -44,4 +44,5 @@ module.exports = (gulp, config) ->
 		'cordova'
 		'nwjs'
 		'create'
+		'test'
 	]
