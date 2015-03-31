@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "gulp-angular",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A collection of gulp tasks for developing angular applications.",
   "main": "index.js",
   "contributors": [
