@@ -45,6 +45,9 @@ module.exports =
 	component:
 		noop: 'noop'
 		# TODO
+	test:
+		noop: 'noop'
+		# TODO
 	nwjs:
 		# see options at https://github.com/mllrsohn/node-webkit-builder
 		appName:
