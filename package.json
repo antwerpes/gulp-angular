@@ -7,7 +7,8 @@
   "contributors": [
     "Andreas Tietz <andreas.tietz@antwerpes.de> (https://github.com/dematerializer)",
     "David Buezas <david.buezas@antwerpes.de> (https://github.com/dbuezas)",
-    "Marc Lutz <marc.lutz@antwerpes.de> (https://github.com/monestereo)"
+    "Marc Lutz <marc.lutz@antwerpes.de> (https://github.com/monestereo)",
+    "Niklas Opaska <niklas.opaska@antwerpes.de> (https://github.com/buscape)"
   ],
   "homepage": "https://github.com/antwerpes/gulp-angular",
   "bugs": "https://github.com/antwerpes/gulp-angular/issues",
