@@ -60,7 +60,10 @@ module.exports = ({gulp, $, config}) ->
 		gulp.src('').pipe $.shell [
 			'cordova build android --release'
 			'mkdir -p release'
-			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk'
+			# Work around https://issues.apache.org/jira/browse/CB-7827
+			# || true prevents a missing file from stopping execution
+			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
+			'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
 		], cwd: config.path
 
 	# Builds production-/distribution-ready iOS
