@@ -139,5 +139,4 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			'web:build:rebase-css',
 			'web:build:partials',
 			'web:build:dist',
-			'web:clean:tmp',
 			cb
