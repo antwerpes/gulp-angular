@@ -24,10 +24,22 @@ module.exports =
 				default: null
 		android:
 			sign:
-				doc: 'signing information for building the Android apk. see README.md for Format specification'
-				format: (val) ->
-					return Array.isArray(val) or val is null
-				default: null
+				'key.store':
+					doc: 'relative path to the keystore file used for signing android apk files'
+					format: '*'
+					default: null
+				'key.store.password':
+					doc: 'password to unlock the keystore file used for signing android apk files'
+					format: '*'
+					default: null
+				'key.alias':
+					doc: 'alias to unlock the keystore file used for signing android apk files'
+					format: '*'
+					default: null
+				'key.alias.password':
+					doc: 'alias password to unlock the keystore file used for signing android apk files'
+					format: '*'
+					default: null
 		deploy:
 			ftp:
 				host:

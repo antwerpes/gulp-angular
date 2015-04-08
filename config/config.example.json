@@ -23,12 +23,12 @@
             "provisioningProfile": "My Provisioning Profile 2015"
         },
         "android": {
-            "sign": [
-                "key.store=../../secret/my.keystore",
-                "key.store.password=123456",
-                "key.alias=my-android-key",
-                "key.alias.password=654321"
-            ]
+            "sign": {
+                "key.store": "../../secret/my.keystore",
+                "key.store.password": "123456",
+                "key.alias": "my-android-key",
+                "key.alias.password": "654321"
+            }
         },
         "deploy": {
             "ftp": {
