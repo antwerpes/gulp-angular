@@ -13,9 +13,9 @@ module.exports = ({gulp, $, config}) ->
 	# app to the release directory.
 	# - Generates an .ipa and an .xcarchive file.
 	# - Signs the app with the provisioning profile named
-	#   in `config.build.ios.provisioningProfile`.
+	#   in `config.ios.provisioningProfile`.
 	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb) ->
-		provisioningProfile = config.build.ios?.provisioningProfile
+		provisioningProfile = config.ios?.provisioningProfile
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
 			return cb()
@@ -48,13 +48,13 @@ module.exports = ({gulp, $, config}) ->
 		unless config.path
 			$.util.log 'no path for building android given in config'
 			return cb()
-		unless config.build.android?.sign?
+		unless config.android?.sign?
 			$.util.log 'no signing information for building android given in config'
 			return cb()
 
 		# Write signing config into ant.properties:
 		antConfig = ''
-		antConfig += "#{key}=#{value}\n" for key, value of config.build.android.sign
+		antConfig += "#{key}=#{value}\n" for key, value of config.android.sign
 		require('fs').writeFileSync $.path.join(config.path, 'platforms/android/ant.properties'), antConfig
 
 		gulp.src('').pipe $.shell [
