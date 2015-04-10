@@ -19,6 +19,11 @@
         }
     },
     "cordova": {
+        "path": "cordova",
+        "plugins": [
+            "org.apache.cordova.console",
+            "org.apache.cordova.device"
+        ],
         "ios": {
             "provisioningProfile": "My Provisioning Profile 2015"
         },

@@ -17,6 +17,10 @@ module.exports =
 			doc: 'destination path for the cordova project'
 			default: 'cordova'
 			format: '*'
+		plugins:
+			doc: 'cordova plugins to be installed after platform projects are generated'
+			default: []
+			format: (value) -> return Array.isArray value
 		ios:
 			provisioningProfile:
 				doc: 'the name as it appears in the xCode Build Settings'

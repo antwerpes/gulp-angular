@@ -4,15 +4,21 @@ module.exports = ({gulp, $, config}) ->
 	# Generates Cordova iOS and Android platform projects
 	# by simply executing `cordova platform add ios and
 	# `cordova platform add android` shell commands.
+	# Also adds plugins defined in config.cordova.plugins.
+
+	installPlugins = []
+	installPlugins.push('cordova plugin add ' + plugin) for plugin in config.plugins
+
 	gulp.task 'cordova:init', ['cordova:destroy'], $.shell.task([
 		'cordova platform add ios'
 		'cordova platform add android'
+	].concat(installPlugins).concat([
 		'echo'
 		'echo'
 		'echo IMPORTANT: in order for "gulp cordova:build:ios" to work properly, please open the generated Xcode project with Xcode and close it again. This is needed to generate some necessary files that xcodebuild command expects to be present.\n\n'
 		'echo'
 		'echo'
-	], cwd: path)
+	]), cwd: path)
 
 	# Deletes any cordova related output directories
 	# like plugins, platforms and release
