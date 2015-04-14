@@ -49,7 +49,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.add $.mainBowerFiles()
 			.on 'change', (path)->
 				switch $.path.extname path
-					when '.js', '.css' then $.runSequence 'web:inject', () ->
-						$.browserSync.reload()
+					when '.js', '.css' then $.runSequence 'web:inject', 'web:build:assets:dev', -> $.browserSync.reload()
 
 
