@@ -30,6 +30,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
+				if $.path.exname in ['.html', '.css', '.js']
+					$.runSequence 'web:build:copy-sources'
 
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/

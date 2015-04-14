@@ -48,6 +48,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe gulp.dest 'src'
 			.pipe $.size()
 
+	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
+	gulp.task 'web:build:copy-images', ->
+		gulp.src ['tmp/**/*.{png,jpg,gif,svg,ico}']
+			.pipe gulp.dest 'dist'
+			.pipe $.size()
+
+
 	# Copies all assets from tmp to dist
 	gulp.task 'web:build:assets', ->
 		# copy all files other than those handled by useref and inject to dist
@@ -131,8 +138,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
-	gulp.task 'web:build', ['web:clean'], (cb)->
+	gulp.task 'web:build', ['web:clean'], (cb) ->
 		$.runSequence 'web:build:dev',
+			'web:build:copy-images'
 			'web:build:assets',
 			'web:build:rebase-css',
 			'web:build:partials',
