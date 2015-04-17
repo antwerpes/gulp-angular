@@ -1,4 +1,15 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
+	
+	# Optimizes images in src
+	gulp.task 'web:optimize:images', ->
+		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
+			.pipe $.imagemin
+				optimizationLevel: 3
+				progressive: yes
+				interlaced: yes
+			.pipe gulp.dest 'src'
+			.pipe $.size()
+
 	###
 		Stage 1, transpile and copy everything and make a working version of the app in tmp
 	###
@@ -40,17 +51,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		Stage 2: get source from tmp and optimize for distribution
 	###
 
-	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
-	gulp.task 'web:build:images', ->
-		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
-			.pipe $.imagemin
-				optimizationLevel: 3
-				progressive: yes
-				interlaced: yes
-			.pipe gulp.dest 'src'
-			.pipe $.size()
 
-	# Optimizes and copies images from tmp to dist, ignoring images found in bower components.
+	# Copies images from tmp to dist, ignoring images found in bower components.
 	gulp.task 'web:build:copy-images', ->
 		gulp.src ['tmp/**/*.{png,jpg,gif,svg,ico}']
 			.pipe gulp.dest 'dist'
