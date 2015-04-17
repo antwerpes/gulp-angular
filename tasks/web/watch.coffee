@@ -42,7 +42,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.on 'unlink', (path) -> gulp.start 'web:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path
-					when '.html', '.js'	then $.browserSync.reload()
+					when '.html', '.js'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
+					when '.css'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
 					else $.browserSync.reload path
 		# chokidar doenst accept an array as first parameter, so we need to start the watcher on nothing and use the add function.
 		$.gracefulChokidar.watch '!**/*',
