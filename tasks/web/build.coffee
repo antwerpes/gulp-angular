@@ -13,7 +13,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# copy all js, css and html files. those dont need to be touched in this phase
 	gulp.task 'web:build:copy-sources', () ->
 		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
+			.pipe $.changed 'tmp'
 			.pipe gulp.dest('tmp')
+			.pipe $.size()
 
 	# copy all other assets and all bower-main-files to tmp
 	gulp.task 'web:build:assets:dev', ['web:copyBowerAssets'], ->
