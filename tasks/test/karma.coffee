@@ -13,7 +13,7 @@ module.exports = ({gulp, $, config}) ->
 
 		appFiles = gulp.src([
 			'tmp/!(bower_components)/**/*.js'
-			'!**/*.{e2e}.js'
+			'!tmp/**/*.e2e.js'
 		]).pipe $.angularFilesort()
 
 		$.mergeStream(bowerStream, appFiles)
