@@ -9,9 +9,8 @@ module.exports = ({gulp, $, config}) ->
 				ignored: /bower_components|^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> gulp.start 'component:build-dirty'
-			.on 'change', (path) ->
-				gulp.start 'component:build-dirty'
+			.on 'add', (path) -> $.runSequence 'component:build-dirty'
+			.on 'change', (path) -> $.runSequence 'component:build-dirty'
 			.on 'error', (error) -> console.error('Error happened', error)
 
 

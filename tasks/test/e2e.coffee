@@ -9,6 +9,6 @@ module.exports = ({gulp, $, config}) ->
 			.on 'error', -> process.exit()
 			.on 'end', -> process.exit()
 
-	gulp.task 'test:dev:e2e', ['web:dev:serve'], -> gulp.start 'test:protractor'
-	gulp.task 'test:dist:e2e', ['web:dist:serve'], -> gulp.start 'test:protractor'
+	gulp.task 'test:dev:e2e', ['web:dev:serve'], -> $.runSequence 'test:protractor'
+	gulp.task 'test:dist:e2e', ['web:dist:serve'], -> $.runSequence 'test:protractor'
 

@@ -34,4 +34,4 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe gulp.dest 'dist'
 
 	gulp.task 'component:build', ['web:clean'], (cb) ->
-		gulp.start('component:build-dirty')
+		$.runSequence 'component:build-dirty', cb

@@ -26,7 +26,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				$.del devFile
 				$.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 			.on 'change', (path) ->
-				gulp.start 'web:dev:transpile:' + switch $.path.extname path
+				$.runSequence 'web:dev:transpile:' + switch $.path.extname path
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
@@ -37,9 +37,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> gulp.start 'web:dev:inject'
+			.on 'add', (path) -> $.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
-			.on 'unlink', (path) -> gulp.start 'web:dev:inject'
+			.on 'unlink', (path) -> $.runSequence 'web:dev:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path
 					when '.html', '.js'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
