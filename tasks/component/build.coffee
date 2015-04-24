@@ -12,19 +12,22 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				empty: yes
 				spare: yes
 				quotes: yes
-			.pipe $.ngHtml2js moduleName: globalConfig.angularModuleName
+			.pipe $.ngHtml2js
+				moduleName: globalConfig.angularModuleName
+				declareModule: no
 			.pipe $.rename suffix: '.partial'
 			.pipe gulp.dest 'tmp'
 			.pipe $.size()
 
 	gulp.task 'component:build-dirty', ['web:transpile', 'component:assets', 'component:partials'], (cb) ->
-		gulp.src '{src,tmp}/**/*.{js,css}'
+		gulp.src ['{src,tmp}/**/*.{js,css}', '!{src,tmp}/**/*.{test,e2e}.js']
 			.pipe cssFilter = $.filter '**/*.css'
 			.pipe $.cssretarget(root: 'tmp')
 			.pipe $.concat('main.css')
 			.pipe gulp.dest 'dist'
 			.pipe cssFilter.restore()
 			.pipe jsFilter = $.filter '**/*.js'
+			.pipe $.angularFilesort()
 			.pipe $.concat 'main.js'
 			.pipe gulp.dest 'dist'
 
