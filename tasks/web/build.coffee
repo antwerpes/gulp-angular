@@ -1,7 +1,7 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
-	
+
 	# Optimizes images in src
-	gulp.task 'web:optimize:images', ->
+	gulp.task 'web:src:optimize-images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
 			.pipe $.imagemin
 				optimizationLevel: 3
@@ -15,21 +15,41 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	###
 
 	#	copy images to tmp
-	gulp.task 'web:build:images:dev', ->
+	gulp.task 'web:tmp:copy-images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
 			.pipe $.changed 'tmp'
 			.pipe gulp.dest 'tmp'
 			.pipe $.size()
 
 	# copy all js, css and html files. those dont need to be touched in this phase
-	gulp.task 'web:build:copy-sources', () ->
+	gulp.task 'web:tmp:copy-sources', () ->
 		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
 			.pipe $.changed 'tmp'
 			.pipe gulp.dest('tmp')
 			.pipe $.size()
 
+	# read the config for folders that need to be copied to the parent
+	# usage example in package.json:
+	# "gulp-angular": {
+	# 	"web": {
+	#			 "bowerAssets": {
+	#			 		"bootstrap": "fonts"
+	#			 }
+	#		}
+	# }
+	# will result in the bootstrap/fonts directory beeing copied to dist/fonts
+	# this might be helpful for files which must be referenced from html or javascript and cannot be rebased
+	gulp.task 'web:tmp:copy-bower-assets', (cb)->
+		if config.copyBowerAssets?
+			streams = []
+			for pkg, assetsFolder of config.copyBowerAssets
+				path = $.path.join 'bower_components',pkg,assetsFolder,'**','*'
+				streams.push gulp.src(path, cwd: '.').pipe gulp.dest $.path.join 'tmp', assetsFolder
+			return $.mergeStream.apply(null, streams)
+		else cb()
+
 	# copy all other assets and all bower-main-files to tmp
-	gulp.task 'web:build:assets:dev', ['web:copyBowerAssets'], ->
+	gulp.task 'web:tmp:assets', ['web:tmp:copy-bower-assets'], ->
 		# copy all asset files
 		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}']
 			.pipe $.changed 'tmp'
@@ -45,7 +65,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		return $.mergeStream ownFiles, bowerMainFiles
 
 	# build the app to tmp
-	gulp.task 'web:build:dev', ['web:inject', 'web:build:assets:dev', 'web:build:images:dev', 'web:build:copy-sources']
+	gulp.task 'web:tmp:build', ['web:tmp:inject', 'web:tmp:assets', 'web:tmp:copy-images', 'web:tmp:copy-sources']
 
 	###
 		Stage 2: get source from tmp and optimize for distribution
@@ -53,14 +73,14 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 
 	# Copies images from tmp to dist, ignoring images found in bower components.
-	gulp.task 'web:build:copy-images', ->
+	gulp.task 'web:dist:copy-images', ->
 		gulp.src ['tmp/**/*.{png,jpg,gif,svg,ico}']
 			.pipe gulp.dest 'dist'
 			.pipe $.size()
 
 
 	# Copies all assets from tmp to dist
-	gulp.task 'web:build:assets', ->
+	gulp.task 'web:dist:assets', ->
 		# copy all files other than those handled by useref and inject to dist
 	 	ownFiles = gulp.src ['tmp/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!tmp/bower_components/**']
 	 		.pipe $.changed 'dist'
@@ -78,11 +98,11 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Minifies and packages html templates/partials found in tmp
 	# into pre-cached angular template modules in dist.
-	gulp.task 'web:build:partials', (cb)->
-		$.runSequence('web:build:create-partials', 'web:build:remove-html', cb)
+	gulp.task 'web:dist:partials', (cb)->
+		$.runSequence('web:tmp:create-partials', 'web:tmp:remove-html', cb)
 
 	# create partials from html files
-	gulp.task 'web:build:create-partials', ->
+	gulp.task 'web:tmp:create-partials', ->
 		gulp.src ['tmp/**/*.html', '!tmp/index.html']
 			.pipe $.minifyHtml
 				empty: yes
@@ -94,18 +114,19 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# remove html files after creating the partial-js-files
-	gulp.task 'web:build:remove-html', (cb)->
+	gulp.task 'web:tmp:remove-html', (cb)->
 		$.del ['tmp/**/*.html', '!tmp/index.html'], cb
 
 	# rebase css urls to be relative to tmp/styles/
-	gulp.task 'web:build:rebase-css', ->
+	gulp.task 'web:tmp:rebase-css', ->
 		gulp.src ['tmp/**/*.css'], nodir: yes, base: 'tmp'
 			.pipe $.cssretarget
 				root: 'tmp/styles'
+				silent: yes
 			.pipe gulp.dest 'tmp'
 
 	# inject partials,
-	gulp.task 'web:build:dist', ->
+	gulp.task 'web:dist:build', ->
 		useSourcemaps = $.util.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
 		if useSourcemaps
 			console.warn $.chalk.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
@@ -143,11 +164,11 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
 	gulp.task 'web:build', ['web:clean'], (cb) ->
-		$.runSequence 'web:build:dev',
-			'web:build:copy-images'
-			'web:build:assets',
-			'web:build:rebase-css',
-			'web:build:partials',
-			'web:build:dist',
-			'web:clean:tmp',
+		$.runSequence 'web:tmp:build',
+			'web:dist:copy-images'
+			'web:dist:assets',
+			'web:tmp:rebase-css',
+			'web:dist:partials',
+			'web:dist:build',
+			'web:tmp:clean',
 			cb

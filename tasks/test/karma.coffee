@@ -1,9 +1,9 @@
 module.exports = ({gulp, $, config}) ->
 
 	gulp.task 'test:build', (cb) ->
-		$.runSequence 'web:build:dev', 'web:build:partials', cb
+		$.runSequence 'web:tmp:build', 'web:dist:partials', cb
 
-	gulp.task 'test:karma', ['test:build'], ->
+	gulp.task 'test:unit', ['test:build'], ->
 		bowerDeps = $.wiredep
 			directory: 'bower_components'
 			dependencies: true
@@ -26,4 +26,3 @@ module.exports = ({gulp, $, config}) ->
 				console.log $.karma
 				throw err
 				return
-

@@ -15,9 +15,9 @@ To bootstrap a project using gulp-angular you need to take the following steps:
 var gulp = require('gulp');
 
 var gulpAngularConfig = {
-	// the module name is the only required parameter. 
+	// the module name is the only required parameter.
 	// For more see config/config.example.json or config/gulp-angular.conf.coffee
-  "angularModuleName": 'MyApp' 
+  "angularModuleName": 'MyApp'
 }
 
 require('gulp-angular')(gulp, gulpAngularConfig);
@@ -31,16 +31,16 @@ Task | Description
 `web:serve` | Builds and serves a clean development version of the web app from `tmp/` while watching for source file changes to live-inject css or reload the app for template and script changes.
 `build` | Builds production-ready versions of the app for the Web, as iOS and Android Cordova Apps and as Node-Webkit App.
 `deploy` | Uploads the production ready Apps to ftp servers
-`build-and-deploy` | Builds and Uploads the production ready Apps to ftp servers. 
+`build-and-deploy` | Builds and Uploads the production ready Apps to ftp servers.
 
 ##### Development
 
 Task | Description
 ---- | -----------
 `web:serve` | Builds and serves a clean development version of the web app from `tmp/` while watching for source file changes to live-inject css or reload the app for template and script changes.
-`web:serve:dist` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
+`web:dist:serve` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
 `nwjs:serve` | Analogous to `web:serve` but inside a Node-Webkit container.
-`nwjs:serve:dist` | Analogous to `web:serve:dist`
+`nwjs:serve:dist` | Analogous to `web:dist:serve`
 `cordova:serve:ios` | Builds an iOS cordova app and updates the sources via `cordova prepare` when they change (App re-run is required to see changes)
 `cordova:serve:android` | Idem for Android
 `cordova:serve:dist:ios` | Idem but with a production-ready version
@@ -56,13 +56,13 @@ Task | Description
 `cordova:build:ios` | Idem but only iOS.
 `cordova:build:android` | Idem but only Android.
 `web:build` | Builds a clean production-ready version of the web app to dist/.
-`web:serve:dist` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
+`web:dist:serve` | analog to `web:serve` but with a minified, concatenated and obfuscated production-ready build.
 `nwjs:serve` | Analogous to `web:serve` but inside a Node-Webkit container.
-`nwjs:serve:dist` | Analogous to `web:serve:dist`
+`nwjs:serve:dist` | Analogous to `web:dist:serve`
 `cordova:serve:ios` | Builds a cordova app and updates the sources via `cordova prepare` when they change
 `cordova:serve:android` | Idem but on Android
 `cordova:serve:dist:ios` | Idem but with production ready-version
-`cordova:serve:dist:android` | Analogous to `web:serve:dist`
+`cordova:serve:dist:android` | Analogous to `web:dist:serve`
 
 ### Scaffolding
 
@@ -96,7 +96,7 @@ Task | Description
 cordova create path/to/cordova de.bundle.identifier appname
 ```
 
-the '.' is important as it will make the current project a cordova app 
+the '.' is important as it will make the current project a cordova app
 
 ##### /package.json (example)
 ```json

@@ -1,14 +1,14 @@
 module.exports = ({gulp, $, config}) ->
 
-	gulp.task 'webdriver_update', $.protractor.webdriver_update
+	gulp.task 'test:protractor:webdriver-update', $.protractor.webdriver_update
 
-	gulp.task 'test:e2e:whatever', ['webdriver_update'], -> # connects to whatever is currently being served
+	gulp.task 'test:protractor', ['test:protractor:webdriver-update'], -> # connects to whatever is currently being served
 		gulp.src '{src,tmp}/**/*.e2e.js}'
 			.pipe $.protractor.protractor
 				configFile: 'protractor.conf.js'
 			.on 'error', -> process.exit()
 			.on 'end', -> process.exit()
 
-	gulp.task 'test:e2e:dev', ['web:serve:dev'], -> gulp.start 'test:e2e:whatever'
-	gulp.task 'test:e2e:dist', ['web:serve:dist'], -> gulp.start 'test:e2e:whatever'
+	gulp.task 'test:dev:e2e', ['web:dev:serve'], -> gulp.start 'test:protractor'
+	gulp.task 'test:dist:e2e', ['web:dist:serve'], -> gulp.start 'test:protractor'
 

@@ -4,7 +4,7 @@ module.exports = ({gulp, $, config}) ->
 	# so on change the watcher should build the dist-files, which are referenced in the bower.json
 	# use carefully! this is meant for small bower_components, not huge projects
 	gulp.task 'component:watch', ['component:build-dirty'], ->
-		$.util.log $.util.colors.yellow('Warning: web:watch:dist is meant for small bower_components. don\'t use it on big projects')
+		$.util.log $.util.colors.yellow('Warning: web:tmp:watch:dist is meant for small bower_components. don\'t use it on big projects')
 		$.gracefulChokidar.watch 'src',
 				ignored: /bower_components|^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
