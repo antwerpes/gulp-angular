@@ -2,31 +2,31 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Watches bower.json and triggers inject when its content changes.
 	# Watches less, sass and coffeescript files in src (not bower components)
 	# and triggers retranspilation when their content changes. New files are
-	# being transpiled and injected into tmp/index.html.
-	# Counterparts in tmp of files being deleted from src are also being deleted
+	# being transpiled and injected into dev/index.html.
+	# Counterparts in dev of files being deleted from src are also being deleted
 	# with inject being triggered afterwards.
-	gulp.task 'web:tmp:watch', ['web:tmp:build'], ->
+	gulp.task 'web:dev:watch', ['web:dev:build'], ->
 		$.gracefulChokidar.watch 'bower.json',
 				ignoreInitial: yes
 				persistent: yes
-			.on 'change', -> $.runSequence 'web:tmp:inject', 'web:tmp:assets', -> $.browserSync.reload()
+			.on 'change', -> $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> $.runSequence 'web:tmp:inject'
+			.on 'add', (path) -> $.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) ->
-				tmpFile = path.replace /^src/, 'tmp'
+				devFile = path.replace /^src/, 'dev'
 					.replace /\.less$/, '.css'
 					.replace /\.scss$/, '.css'
 					.replace /\.coffee$/, '.js'
 					.replace /\.jade$/, '.html'
-				$.del tmpFile
-				$.runSequence 'web:tmp:inject', 'web:tmp:assets', -> $.browserSync.reload()
+				$.del devFile
+				$.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 			.on 'change', (path) ->
-				gulp.start 'web:tmp:transpile:' + switch $.path.extname path
+				gulp.start 'web:dev:transpile:' + switch $.path.extname path
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
@@ -37,9 +37,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> gulp.start 'web:tmp:inject'
+			.on 'add', (path) -> gulp.start 'web:dev:inject'
 			.on 'error', $.handleStreamError
-			.on 'unlink', (path) -> gulp.start 'web:tmp:inject'
+			.on 'unlink', (path) -> gulp.start 'web:dev:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path
 					when '.html', '.js'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
@@ -52,6 +52,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.add $.mainBowerFiles()
 			.on 'change', (path)->
 				switch $.path.extname path
-					when '.js', '.css' then $.runSequence 'web:tmp:inject', 'web:tmp:assets', -> $.browserSync.reload()
+					when '.js', '.css' then $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 
 

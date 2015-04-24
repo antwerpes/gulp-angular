@@ -9,7 +9,7 @@ module.exports = ({gulp, $, config}) ->
 
 	devConfig = $.deepExtend({}, config)
 	devConfig.appName = devConfig.appName + '_dev'
-	devConfig.files = 'tmp/package.json'
+	devConfig.files = 'dev/package.json'
 
 	gulp.task 'nwjs:build', ['web:build'], (cb) ->
 		$.runSequence 'nwjs:build:copy-dist', cb
@@ -35,7 +35,7 @@ module.exports = ({gulp, $, config}) ->
 		devPackage = $.deepExtend devPackage, config.dev?.packageOverrides
 		gulp.src 'src/package.json', base: 'src'
 			.pipe $.jsonEditor devPackage
-			.pipe gulp.dest('tmp')
+			.pipe gulp.dest('dev')
 
 	gulp.task 'nwjs:build:createDev', ->
 		new $.nodeWebkitBuilder devConfig

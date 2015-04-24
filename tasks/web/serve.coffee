@@ -1,15 +1,15 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
 	# Starts a local web server serving the development version of the web app.
-	# Serves files from both the tmp and the src directories. Files in tmp
+	# Serves files from both the dev and the src directories. Files in dev
 	# have precedence over those found in src, which is especially important
 	# in order to ensure that the injected version of index.html gets served.
-	gulp.task 'web:tmp:browser-sync', (cb) ->
+	gulp.task 'web:dev:browser-sync', (cb) ->
 		$.browserSync
 			# files: [ # files being watched
-			# 	'{tmp,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
+			# 	'{dev,src}/**/*.{html,css,js,png,jpg,gif,svg,ico}']
 			# this is triggered manually to avoid having too many watches
 			server:
-				baseDir: 'tmp'
+				baseDir: 'dev'
 			startPath: '/index.html'
 			browser: 'default'
 			open: no
@@ -33,6 +33,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		, (err) -> if err then $.handleStreamError(err) else cb()
 
 	# Builds and serves a clean development version of the web app while watching for source file changes.
-	gulp.task 'web:dev:serve', (cb) -> $.runSequence 'web:tmp:watch', 'web:tmp:browser-sync', cb
+	gulp.task 'web:dev:serve', (cb) -> $.runSequence 'web:dev:watch', 'web:dev:browser-sync', cb
 	# Starts a local web server serving the production-/distribution-ready version of the web app.
 	gulp.task 'web:dist:serve', (cb) -> $.runSequence 'web:build', 'web:dist:browser-sync', cb

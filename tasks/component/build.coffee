@@ -6,8 +6,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Minifies and packages html templates/partials found in src
 	# into pre-cached angular template modules in dist.
-	gulp.task 'component:partials', ['web:tmp:transpile:templates'], ->
-		gulp.src ['src/**/*.html', 'tmp/**/*.html']
+	gulp.task 'component:partials', ['web:dev:transpile:templates'], ->
+		gulp.src ['src/**/*.html', 'dev/**/*.html']
 			.pipe $.minifyHtml
 				empty: yes
 				spare: yes
@@ -16,14 +16,14 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				moduleName: globalConfig.angularModuleName
 				declareModule: no
 			.pipe $.rename suffix: '.partial'
-			.pipe gulp.dest 'tmp'
+			.pipe gulp.dest 'dev'
 			.pipe $.size()
 
-	gulp.task 'component:build-dirty', ['web:tmp:transpile', 'component:assets', 'component:partials'], (cb) ->
-		gulp.src ['{src,tmp}/**/*.{js,css}', '!{src,tmp}/**/*.{test,e2e}.js']
+	gulp.task 'component:build-dirty', ['web:dev:transpile', 'component:assets', 'component:partials'], (cb) ->
+		gulp.src ['{src,dev}/**/*.{js,css}', '!{src,dev}/**/*.{test,e2e}.js']
 			.pipe cssFilter = $.filter '**/*.css'
 			.pipe $.cssretarget
-				root: 'tmp'
+				root: 'dev'
 				silent: true
 			.pipe $.concat('main.css')
 			.pipe gulp.dest 'dist'

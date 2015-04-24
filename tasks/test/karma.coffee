@@ -1,7 +1,7 @@
 module.exports = ({gulp, $, config}) ->
 
 	gulp.task 'test:build', (cb) ->
-		$.runSequence 'web:tmp:build', 'web:dist:partials', cb
+		$.runSequence 'web:dev:build', 'web:dist:partials', cb
 
 	gulp.task 'test:unit', ['test:build'], ->
 		bowerDeps = $.wiredep
@@ -12,15 +12,15 @@ module.exports = ({gulp, $, config}) ->
 		bowerStream = gulp.src bowerDeps.js, nodir: yes
 
 		appFiles = gulp.src([
-			'tmp/!(bower_components)/**/*.js'
-			'!tmp/**/*.e2e.js'
+			'dev/!(bower_components)/**/*.js'
+			'!dev/**/*.e2e.js'
 		]).pipe $.angularFilesort()
 
 		$.mergeStream(bowerStream, appFiles)
 			.pipe $.karma
 				configFile: 'karma.conf.js'
 				action: 'run'
-				basePath: 'tmp'
+				basePath: 'dev'
 			.on 'error', (err) ->
 				# Make sure failed tests cause gulp to exit non-zero
 				console.log $.karma
