@@ -5,6 +5,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		$.sass = $.util.noop
 
 	require('./'+task)({gulp, $, config, globalConfig}) for task in [
+		'utils'
+		'dev'
 		'clean'
 		'transpile'
 		'inject'
