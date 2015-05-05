@@ -31,7 +31,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
 				if $.path.exname in ['.html', '.css', '.js']
-					$.runSequence 'web:build:copy-sources'
+					$.runSequence 'web:dev:copy-sources'
 
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
@@ -42,8 +42,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.on 'unlink', (path) -> $.runSequence 'web:dev:inject'
 			.on 'change', (path) ->
 				switch $.path.extname path
-					when '.html', '.js'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
-					when '.css'	then $.runSequence 'web:build:copy-sources', -> $.browserSync.reload(path)
+					when '.html', '.js'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
+					when '.css'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
 					else $.browserSync.reload path
 		# chokidar doenst accept an array as first parameter, so we need to start the watcher on nothing and use the add function.
 		$.gracefulChokidar.watch '!**/*',
