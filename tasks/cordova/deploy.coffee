@@ -5,7 +5,7 @@ module.exports = ({gulp, $, config}) ->
 
 	# Uploads .ipa files found in the release directory to an FTP
 	# server location that must be specified in gulp-angular-config.js.
-	gulp.task 'cordova:deploy:ios', ->
+	gulp.task 'cordova:ios:deploy', ->
 		unless ftpConfig?
 			return $.util.warn 'no ftp data given in config'
 		gulp.src $.path.join(config.path, 'release/*.ipa')
@@ -14,7 +14,7 @@ module.exports = ({gulp, $, config}) ->
 
 	# Uploads .apk files found in the release directory to an FTP
 	# server location that must be specified in gulp-angular-config.js.
-	gulp.task 'cordova:deploy:android', ->
+	gulp.task 'cordova:android:deploy', ->
 		unless ftpConfig?
 			return $.util.warn 'no ftp data given in config'
 		gulp.src $.path.join(config.path, 'release/*.apk')
@@ -23,4 +23,4 @@ module.exports = ({gulp, $, config}) ->
 
 	# Uploads .ipa and .apk files found in the release directory to an FTP
 	# server location that must be specified in gulp-angular-config.js.
-	gulp.task 'cordova:deploy', ['cordova:deploy:ios', 'cordova:deploy:android']
+	gulp.task 'cordova:deploy', ['cordova:ios:deploy', 'cordova:android:deploy']

@@ -14,7 +14,7 @@ module.exports = ({gulp, $, config}) ->
 	# - Generates an .ipa and an .xcarchive file.
 	# - Signs the app with the provisioning profile named
 	#   in `config.ios.provisioningProfile`.
-	gulp.task 'cordova:build:ios', ['cordova:clean:ios'], (cb) ->
+	gulp.task 'cordova:ios:build', ['cordova:ios:clean'], (cb) ->
 		provisioningProfile = config.ios?.provisioningProfile
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
@@ -41,7 +41,7 @@ module.exports = ({gulp, $, config}) ->
 	# app (.apk file) into the release directory.
 	# Configuration of app signing must be performed separately
 	# e.g. via a custom after_platform_add cordova hook.
-	gulp.task 'cordova:build:android', ['cordova:clean:android'], (cb) ->
+	gulp.task 'cordova:android:build', ['cordova:android:clean'], (cb) ->
 		unless appName
 			$.util.log 'no appName for building android given in config'
 			return cb()
@@ -68,4 +68,4 @@ module.exports = ({gulp, $, config}) ->
 
 	# Builds production-/distribution-ready iOS
 	# and Android apps into the release directory.
-	gulp.task 'cordova:build', ['cordova:build:ios', 'cordova:build:android']
+	gulp.task 'cordova:build', ['cordova:ios:build', 'cordova:android:build']

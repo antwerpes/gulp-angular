@@ -15,7 +15,7 @@ module.exports = ({gulp, $, config}) ->
 	].concat(installPlugins).concat([
 		'echo'
 		'echo'
-		'echo IMPORTANT: in order for "gulp cordova:build:ios" to work properly, please open the generated Xcode project with Xcode and close it again. This is needed to generate some necessary files that xcodebuild command expects to be present.\n\n'
+		'echo IMPORTANT: in order for "gulp cordova:ios:build" to work properly, please open the generated Xcode project with Xcode and close it again. This is needed to generate some necessary files that xcodebuild command expects to be present.\n\n'
 		'echo'
 		'echo'
 	]), cwd: path)
