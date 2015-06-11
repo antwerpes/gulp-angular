@@ -30,9 +30,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					when '.less', '.scss'	then 'styles'
 					when '.coffee'			then 'scripts'
 					when '.jade'			then 'templates'
-				if $.path.extname in ['.html', '.css', '.js']
+				if $.path.extname(path) in ['.html', '.css', '.js']
 					$.runSequence 'web:dev:copy-sources'
-				if $.path.extname in ['png','jpg','gif','svg','ico']
+				if $.path.extname(path) in ['png','jpg','gif','svg','ico']
 					$.runSequence 'web:dev:copy-images'
 
 		$.gracefulChokidar.watch 'src',
@@ -43,6 +43,9 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) -> $.runSequence 'web:dev:inject'
 			.on 'change', (path) ->
+				if path.indexOf('index.html')
+					$.runSequence 'web:dev:inject', -> $.browserSync.reload(path)
+					return
 				switch $.path.extname path
 					when '.html', '.js'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
 					when '.css'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)

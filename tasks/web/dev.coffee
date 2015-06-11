@@ -12,7 +12,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# copy all js, css and html files. those dont need to be touched in this phase
 	gulp.task 'web:dev:copy-sources', () ->
-		gulp.src ['src/**/*.{js,css,html}']
+		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
+			.pipe $.changed 'dev'
+			.pipe gulp.dest('dev')
+			.pipe $.size()
+
+	gulp.task 'web:dev:copy-index', () ->
+		gulp.src ['src/index.html']
 			.pipe $.changed 'dev'
 			.pipe gulp.dest('dev')
 			.pipe $.size()
