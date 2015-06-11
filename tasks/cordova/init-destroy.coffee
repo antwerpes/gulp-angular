@@ -9,7 +9,7 @@ module.exports = ({gulp, $, config}) ->
 	installPlugins = []
 	installPlugins.push('cordova plugin add ' + plugin) for plugin in config.plugins
 
-	gulp.task 'cordova:init', ['cordova:destroy'], $.shell.task([
+	gulp.task 'cordova:init', ['cordova:destroy', 'cordova:use:dev'], $.shell.task([
 		'cordova platform add ios'
 		'cordova platform add android'
 	].concat(installPlugins).concat([

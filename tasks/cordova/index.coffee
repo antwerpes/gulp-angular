@@ -5,4 +5,5 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		'build'
 		'run'
 		'deploy'
+		'use'
 	]
