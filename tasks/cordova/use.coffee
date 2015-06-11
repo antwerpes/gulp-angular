@@ -16,5 +16,5 @@ module.exports = ({gulp, $, config}) ->
 
 	gulp.task 'cordova:uses', ->
 		gulp.src('').pipe $.shell [
-			"ls -l www | awk '{print $11}'"
+			"ls -l www|rev|cut -d' ' -f1-3|rev"
 		], cwd: config.path
