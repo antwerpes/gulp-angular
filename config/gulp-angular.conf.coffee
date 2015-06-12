@@ -26,6 +26,10 @@ module.exports =
 				doc: 'the name as it appears in the xCode Build Settings'
 				format: '*'
 				default: null
+			codeSigningIdentity:
+				doc: 'the name as it appears in the xCode Build Settings'
+				format: '*'
+				default: null
 		android:
 			sign:
 				'key.store':

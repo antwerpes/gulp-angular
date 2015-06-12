@@ -16,6 +16,7 @@ module.exports = ({gulp, $, config}) ->
 	#   in `config.ios.provisioningProfile`.
 	gulp.task 'cordova:ios:build', ['cordova:ios:clean'], (cb) ->
 		provisioningProfile = config.ios?.provisioningProfile
+		codeSigningIdentity = config.ios?.codeSigningIdentity
 		unless appName
 			$.util.log 'no app-name given at package.json: gulp-angular.cordova.build.appName'
 			return cb()
@@ -25,16 +26,23 @@ module.exports = ({gulp, $, config}) ->
 		unless config.path
 			$.util.log 'no path given at package.json: gulp-angular.cordova.build.path'
 			return cb()
-		gulp.src('').pipe $.shell [
+
+		cmds = [
 			'mkdir -p release'
 			'cordova prepare'
 			'cd platforms/ios; xcodebuild clean -project ' + appName + '.xcodeproj -configuration Release -alltargets'
 			'cd platforms/ios; xcodebuild archive -project ' + appName + '.xcodeproj -scheme ' + appName + ' -archivePath ' + appName + '.xcarchive'
 			'cd platforms/ios; xcodebuild -exportArchive -archivePath ' + appName + '.xcarchive -exportPath ' + appName + ' -exportFormat ipa -exportProvisioningProfile "' + provisioningProfile + '"'
-			'mv platforms/ios/' + appName + '.xcarchive release/' + underscoredAppName + '.xcarchive'
-			'mv platforms/ios/' + appName + '.ipa release/' + underscoredAppName + '.ipa'
 			#'ipa info release/' + appName + '.ipa' # outputs a nice overview, but requires shenzhen to be installed
-		], cwd: config.path
+		]
+
+		if codeSigningIdentity
+			cmds.push 'cd platforms/ios; echo "!!!!!!!!!!!!!!!!!!!!!!!! $(pwd -P) !!!!!!!!!!!!!!!!!!!!!!!!"; codesign -f --sign ' + codeSigningIdentity + ' ' + appName + '.ipa'
+
+		cmds.push 'mv platforms/ios/' + appName + '.xcarchive release/' + underscoredAppName + '.xcarchive'
+		cmds.push 'mv platforms/ios/' + appName + '.ipa release/' + underscoredAppName + '.ipa'
+
+		gulp.src('').pipe $.shell cmds, cwd: config.path
 
 
 	# Builds a production-/distribution-ready Android
