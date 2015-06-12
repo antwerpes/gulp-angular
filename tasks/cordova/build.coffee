@@ -73,6 +73,8 @@ module.exports = ({gulp, $, config}) ->
 			# 'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
 			# 'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
 		]
+		gulp.src('').pipe $.shell buildCommand, cwd: config.path
+
 
 	# Builds production-/distribution-ready iOS
 	# and Android apps into the release directory.
