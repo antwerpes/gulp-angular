@@ -37,7 +37,7 @@ module.exports = ({gulp, $, config}) ->
 		]
 
 		if codeSigningIdentity
-			cmds.push 'cd platforms/ios; echo "!!!!!!!!!!!!!!!!!!!!!!!! $(pwd -P) !!!!!!!!!!!!!!!!!!!!!!!!"; codesign -f --sign ' + codeSigningIdentity + ' ' + appName + '.ipa'
+			cmds.push 'cd platforms/ios; codesign -f --sign ' + codeSigningIdentity + ' ' + appName + '.ipa'
 
 		cmds.push 'mv platforms/ios/' + appName + '.xcarchive release/' + underscoredAppName + '.xcarchive'
 		cmds.push 'mv platforms/ios/' + appName + '.ipa release/' + underscoredAppName + '.ipa'
