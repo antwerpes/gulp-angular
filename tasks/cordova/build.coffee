@@ -53,18 +53,18 @@ module.exports = ({gulp, $, config}) ->
 			return cb()
 
 		# Write signing config into ant.properties:
-		antConfig = ''
-		antConfig += "#{key}=#{value}\n" for key, value of config.android.sign
-		require('fs').writeFileSync $.path.join(config.path, 'platforms/android/ant.properties'), antConfig
+		gradleSignConfig = config.android.sign.join '\n'
+		fs = require('fs')
 
-		gulp.src('').pipe $.shell [
+		fs.writeFileSync $.path.join(config.path, 'platforms/android/release-signing.properties'), gradleSignConfig
+		buildCommand = [
 			'cordova build android --release'
 			'mkdir -p release'
 			# Work around https://issues.apache.org/jira/browse/CB-7827
 			# || true prevents a missing file from stopping execution
-			'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
-			'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
-		], cwd: config.path
+			# 'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
+			# 'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
+		]
 
 	# Builds production-/distribution-ready iOS
 	# and Android apps into the release directory.
