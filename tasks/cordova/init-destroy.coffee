@@ -9,10 +9,14 @@ module.exports = ({gulp, $, config}) ->
 	installPlugins = []
 	installPlugins.push('cordova plugin add ' + plugin) for plugin in config.plugins
 
-	gulp.task 'cordova:init', ['cordova:destroy', 'cordova:use:dev'], $.shell.task([
+	gulp.task 'cordova:init', ['cordova:destroy'], $.shell.task([
+		'rm www || true'
+		'mkdir www'
 		'cordova platform add ios'
 		'cordova platform add android'
 	].concat(installPlugins).concat([
+		'rmdir www'
+		'ln -sfn ../dev www'
 		'echo'
 		'echo'
 		'echo IMPORTANT: in order for "gulp cordova:ios:build" to work properly, please open the generated Xcode project with Xcode and close it again. This is needed to generate some necessary files that xcodebuild command expects to be present.\n\n'
@@ -25,4 +29,9 @@ module.exports = ({gulp, $, config}) ->
 	# (that can be regenerated at any time).
 	gulp.task 'cordova:destroy', (cb) ->
 		return cb() unless path
-		$.del [$.path.join(path, 'plugins'), $.path.join(path, 'platforms'), $.path.join(path, 'release')], cb
+		$.del [
+			$.path.join(path, 'www'),
+			$.path.join(path, 'plugins'),
+			$.path.join(path, 'platforms'),
+			$.path.join(path, 'release')
+		],cb
