@@ -73,6 +73,7 @@ module.exports = ({gulp, $, config}) ->
 			# || true prevents a missing file from stopping execution
 			# 'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
 			# 'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
+			'mv platforms/android/build/outputs/apk/android-release.apk release/' + underscoredAppName + '.apk || true'
 		]
 		gulp.src('').pipe $.shell buildCommand, cwd: config.path
 
