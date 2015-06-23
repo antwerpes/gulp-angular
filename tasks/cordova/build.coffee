@@ -61,7 +61,8 @@ module.exports = ({gulp, $, config}) ->
 			return cb()
 
 		# Write signing config into ant.properties:
-		gradleSignConfig = config.android.sign.join '\n'
+		gradleSignConfig = ''
+		gradleSignConfig += "#{key}=#{value}\n" for key, value of config.android.sign
 		fs = require('fs')
 
 		fs.writeFileSync $.path.join(config.path, 'platforms/android/release-signing.properties'), gradleSignConfig
