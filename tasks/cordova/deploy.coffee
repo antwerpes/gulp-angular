@@ -25,4 +25,5 @@ module.exports = ({gulp, $, config}) ->
 	# server location that must be specified in gulp-angular-config.js.
 	gulp.task 'cordova:ios:build-deploy', (cb) -> $.runSequence 'cordova:ios:build', 'cordova:ios:deploy', cb
 	gulp.task 'cordova:android:build-deploy', (cb) -> $.runSequence 'cordova:android:build', 'cordova:android:deploy', cb
+	gulp.task 'cordova:build-deploy', (cb) -> $.runSequence 'cordova:ios:build', 'cordova:ios:deploy', 'cordova:android:build', 'cordova:android:deploy', cb
 	gulp.task 'cordova:deploy', ['cordova:ios:deploy', 'cordova:android:deploy']
