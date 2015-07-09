@@ -42,7 +42,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				persistent: yes
 			.on 'add', (path) ->
 				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
-					console.log '------------------------copy------------------------'
 					$.runSequence 'web:dev:copy-images'
 				$.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
