@@ -74,6 +74,7 @@ module.exports = ({gulp, $, config}) ->
 			# 'mv platforms/android/ant-build/CordovaApp-release.apk release/' + underscoredAppName + '.apk || true'
 			# 'mv platforms/android/ant-build/MainActivity-release.apk release/' + underscoredAppName + '.apk || true'
 			'mv platforms/android/build/outputs/apk/android-release.apk release/' + underscoredAppName + '.apk || true'
+			'mv platforms/android/build/outputs/apk/android-armv7-release.apk release/' + underscoredAppName + '.apk || true' # crosswalk?
 		]
 		gulp.src('').pipe $.shell buildCommand, cwd: config.path
 
