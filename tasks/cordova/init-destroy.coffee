@@ -8,6 +8,7 @@ module.exports = ({gulp, $, config}) ->
 
 	installPlugins = []
 	installPlugins.push('cordova plugin add ' + plugin) for plugin in config.plugins
+	if installPlugins.length > 0 then console.log "DEPRICATED: Plugin installation via gulp-angular is depricated. Please use 'cordova plugin add --save' instead."
 
 	gulp.task 'cordova:init', ['cordova:destroy'], $.shell.task([
 		'rm www || true'

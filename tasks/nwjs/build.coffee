@@ -20,7 +20,7 @@ module.exports = ({gulp, $, config}) ->
 		], cwd: 'dist'
 
 	gulp.task 'nwjs:build:copy-dist', ['nwjs:build:npm-install'], (cb) ->
-		new $.nodeWebkitBuilder config
+		new $.nwBuilder config
 			.on 'log', console.log
 			.build().then ->
 				console.log 'webkit done'
@@ -38,7 +38,7 @@ module.exports = ({gulp, $, config}) ->
 			.pipe gulp.dest('dev')
 
 	gulp.task 'nwjs:build:createDev', ->
-		new $.nodeWebkitBuilder devConfig
+		new $.nwBuilder devConfig
 				.on 'log', console.log
 				.build().then ->
 					console.log 'webkit done'
@@ -54,4 +54,3 @@ module.exports = ({gulp, $, config}) ->
 	gulp.task 'nwjs:build:dev', ['nwjs:build:dev:modifyPackageJson'], (cb) ->
 		$.del $.path.join(devConfig.buildDir, devConfig.appName, devConfig.currentArchitecture, devConfig.appName + '.app')
 		$.runSequence 'nwjs:build:createDev', 'nwjs:build:npm-install:dev', cb
-

@@ -6,7 +6,7 @@ module.exports = (gulp, config) ->
 			'graceful-chokidar'
 			'del'
 			'xml2json'
-			'node-webkit-builder'
+			'nw-builder'
 			'wiredep'
 			'browser-sync'
 			'main-bower-files'

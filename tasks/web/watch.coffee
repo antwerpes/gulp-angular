@@ -15,7 +15,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> $.runSequence 'web:dev:inject'
+			.on 'add', (path) ->
+				$.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) ->
 				devFile = path.replace /^src/, 'dev'
@@ -32,14 +33,17 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					when '.jade'			then 'templates'
 				if $.path.extname(path) in ['.html', '.css', '.js']
 					$.runSequence 'web:dev:copy-sources'
-				if $.path.extname(path) in ['png','jpg','gif','svg','ico']
+				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
 					$.runSequence 'web:dev:copy-images'
 
 		$.gracefulChokidar.watch 'src',
 				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
-			.on 'add', (path) -> $.runSequence 'web:dev:inject'
+			.on 'add', (path) ->
+				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
+					$.runSequence 'web:dev:copy-images'
+				$.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) -> $.runSequence 'web:dev:inject'
 			.on 'change', (path) ->
