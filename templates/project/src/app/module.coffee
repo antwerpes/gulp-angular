@@ -1,6 +1,8 @@
 angular.module('<%= moduleName %>', [
 	'ui.router'
-]).config ($stateProvider, $urlRouterProvider) ->
+]).config ($stateProvider, $urlRouterProvider, $compileProvider) ->
+	# $compileProvider.debugInfoEnabled no
+	console.error 'DISABLE DEBUG INFO BEFORE RELEASE'
 	$stateProvider.state 'welcome',
 		url: '/'
 		templateUrl: 'app/welcome/welcome.html'
