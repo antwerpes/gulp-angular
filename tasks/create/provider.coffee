@@ -1,4 +1,4 @@
-module.exports = ({gulp, $, config}) ->
+module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'create:provider', ->
 		if not $.util.env.n or $.util.env.n is ''
 			$.util.log $.util.colors.red('Please give a name with -n')
@@ -9,12 +9,11 @@ module.exports = ({gulp, $, config}) ->
 			destPath = $.path.join process.env.INIT_CWD, name
 		else
 			destPath = './src/services/' + name + '/'
-
 		cameledName = name.replace(/-([a-z])/g, (g) ->
 			g[1].toUpperCase()
 		)
 
-		gulp.src($.path.join(__dirname, 'templates/provider/template.provider.coffee'))
+		gulp.src($.path.join(__dirname, '../../templates/provider/template.provider.coffee'))
 		.pipe($.template(
 			appName: globalConfig.angularModuleName
 			cameledName: cameledName
