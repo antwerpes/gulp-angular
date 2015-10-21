@@ -46,7 +46,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# copy all other assets and all bower-main-files to dev
 	gulp.task 'web:dev:assets', ['web:dev:copy-bower-assets'], ->
 		# copy all asset files
-		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}']
+		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}']
 			.pipe $.changed 'dev'
 			.pipe gulp.dest 'dev'
 			.pipe $.size()

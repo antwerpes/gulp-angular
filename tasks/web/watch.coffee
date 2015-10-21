@@ -12,7 +12,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.on 'change', -> $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 
 		$.gracefulChokidar.watch 'src',
-				ignored: /^.*\.(?!less$|scss$|coffee$|jade$)[^.]+$/
+				ignored: /^.*\.(?!less$|scss$|sass$|coffee$|jade$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) ->
@@ -22,15 +22,16 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				devFile = path.replace /^src/, 'dev'
 					.replace /\.less$/, '.css'
 					.replace /\.scss$/, '.css'
+					.replace /\.sass$/, '.css'
 					.replace /\.coffee$/, '.js'
 					.replace /\.jade$/, '.html'
 				$.del devFile
 				$.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 			.on 'change', (path) ->
 				$.runSequence 'web:dev:transpile:' + switch $.path.extname path
-					when '.less', '.scss'	then 'styles'
-					when '.coffee'			then 'scripts'
-					when '.jade'			then 'templates'
+					when '.less', '.scss', '.sass'	then 'styles'
+					when '.coffee'									then 'scripts'
+					when '.jade'										then 'templates'
 				if $.path.extname(path) in ['.html', '.css', '.js']
 					$.runSequence 'web:dev:copy-sources'
 				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
@@ -62,5 +63,3 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.on 'change', (path)->
 				switch $.path.extname path
 					when '.js', '.css' then $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
-
-

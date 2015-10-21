@@ -2,11 +2,12 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Transpiles less and sass files found in src into css files copied to dev.
 	# Automatically adds vendor prefixes after transpilation.
 	gulp.task 'web:dev:transpile:styles', ->
-		gulp.src ['src/**/*.{less,scss}']
+		gulp.src ['src/**/*.{less,scss,sass}']
 			.pipe $.changed 'dev', extension: '.css' # keep traffic low (important for watch task)
 			.pipe($.if '*.less', $.less())
 				.on 'error', $.handleStreamError
-			.pipe $.if '*.scss', $.sass
+			.pipe $.if /(\.scss|\.sass)$/, $.sass
+				indentedSyntax: yes # enable sass syntax
 				onError: (err) ->
 					# FIXME: abort on startup, continue when watching
 					# TODO: investigate when task is called within $.sequence
@@ -45,4 +46,3 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Transpiles styles and scripts from src to dev.
 	gulp.task 'web:dev:transpile', ['web:dev:transpile:styles', 'web:dev:transpile:scripts', 'web:dev:transpile:templates']
-

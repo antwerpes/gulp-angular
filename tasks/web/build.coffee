@@ -13,7 +13,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Copies all assets from dev to dist
 	gulp.task 'web:dist:assets', ->
 		# copy all files other than those handled by useref and inject to dist
-	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**']
+	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**']
 	 		.pipe $.changed 'dist'
 	 		.pipe gulp.dest 'dist'
 	 		.pipe $.size()
