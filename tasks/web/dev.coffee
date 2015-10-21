@@ -60,4 +60,5 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		return $.mergeStream ownFiles, bowerMainFiles
 
 	# build the app to dev
-	gulp.task 'web:dev:build', ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources']
+	# gulp.task 'web:dev:build', ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources']
+	gulp.task 'web:dev:build', (cb) -> $.runSequence ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources'], 'web:dev:generate-appcache-manifest', cb

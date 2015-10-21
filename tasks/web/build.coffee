@@ -102,4 +102,5 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			'web:dist:partials',
 			'web:dist:build',
 			'web:dev:clean',
+			'web:dist:generate-appcache-manifest'
 			cb

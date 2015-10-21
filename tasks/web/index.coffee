@@ -13,4 +13,5 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		'watch'
 		'serve'
 		'build'
+		'appcache'
 	]
