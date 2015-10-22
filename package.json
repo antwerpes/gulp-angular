@@ -67,8 +67,11 @@
     "main-bower-files": "^2.9.0",
     "merge-stream": "^0.1.8",
     "nw-builder": "^2.0.1",
+    "parse-appcache-manifest": "^0.2.0",
+    "path": "^0.12.7",
     "protractor": "^2.1.0",
     "run-sequence": "git://github.com/antwerpes/run-sequence",
+    "through": "^2.3.8",
     "uglify-save-license": "^0.4.1",
     "wiredep": "2.x.x",
     "xml2json": "^0.7.1"

@@ -16,6 +16,8 @@ module.exports = (gulp, config) ->
 			'deep-extend'
 			'convict'
 			'chalk'
+			'through'
+			'parse-appcache-manifest'
 		]
 		config: path.join(__dirname, 'package.json')
 		scope: ['dependencies']
