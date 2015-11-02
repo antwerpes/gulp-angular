@@ -45,8 +45,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.size()
 
 	# remove html files after creating the partial-js-files
-	gulp.task 'web:dev:remove-html', (cb)->
-		$.del ['dev/**/*.html', '!dev/index.html'], cb
+	gulp.task 'web:dev:remove-html', ()->
+		$.del ['dev/**/*.html', '!dev/index.html']
 
 	# rebase css urls to be relative to dev/styles/
 	gulp.task 'web:dev:rebase-css', ->
@@ -83,12 +83,12 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			# Continue working on index.html and compound css and js files.
 			.pipe $.useref() # replace <!-- build:* --> placeholders with paths of compound files
 			.pipe $.revReplace() # add revision hashes to compound file references
-			.pipe htmlFilter = $.filter 'index.html'
+			.pipe htmlFilter = $.filter('index.html', restore: yes)
 				.pipe $.minifyHtml
 					empty: yes
 					spare: yes
 					quotes: yes
-			.pipe htmlFilter.restore()
+			.pipe htmlFilter.restore
 			# Write out compound files and changes to index.html
 			.pipe gulp.dest 'dist'
 			.pipe $.size()

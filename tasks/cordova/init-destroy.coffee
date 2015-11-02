@@ -28,11 +28,11 @@ module.exports = ({gulp, $, config}) ->
 	# Deletes any cordova related output directories
 	# like plugins, platforms and release
 	# (that can be regenerated at any time).
-	gulp.task 'cordova:destroy', (cb) ->
+	gulp.task 'cordova:destroy', () ->
 		return cb() unless path
 		$.del [
 			$.path.join(path, 'www'),
 			$.path.join(path, 'plugins'),
 			$.path.join(path, 'platforms'),
 			$.path.join(path, 'release')
-		],cb
+		]

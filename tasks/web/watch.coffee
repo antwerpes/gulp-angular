@@ -25,7 +25,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					.replace /\.sass$/, '.css'
 					.replace /\.coffee$/, '.js'
 					.replace /\.jade$/, '.html'
-				$.del devFile
+				$.del.sync devFile
 				$.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 			.on 'change', (path) ->
 				$.runSequence 'web:dev:transpile:' + switch $.path.extname path
