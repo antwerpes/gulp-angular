@@ -21,13 +21,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	gulp.task 'component:build-dirty', ['web:dev:transpile', 'component:assets', 'component:partials'], (cb) ->
 		gulp.src ['{src,dev}/**/*.{js,css}', '!{src,dev}/**/*.{test,e2e}.js']
-			.pipe cssFilter = $.filter '**/*.css'
+			.pipe cssFilter = $.filter('**/*.css', restore: yes)
 			.pipe $.cssretarget
 				root: 'dev'
 				silent: true
 			.pipe $.concat('main.css')
 			.pipe gulp.dest 'dist'
-			.pipe cssFilter.restore()
+			.pipe cssFilter.restore
 			.pipe jsFilter = $.filter '**/*.js'
 			.pipe $.angularFilesort()
 			.pipe $.concat 'main.js'

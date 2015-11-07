@@ -52,5 +52,5 @@ module.exports = ({gulp, $, config}) ->
 		], cwd: $.path.join devConfig.buildDir, devConfig.appName, devConfig.currentArchitecture, devConfig.appName + '.app', 'Contents', 'Resources', 'app.nw'
 
 	gulp.task 'nwjs:build:dev', ['nwjs:build:dev:modifyPackageJson'], (cb) ->
-		$.del $.path.join(devConfig.buildDir, devConfig.appName, devConfig.currentArchitecture, devConfig.appName + '.app')
+		$.del.sync [$.path.join(devConfig.buildDir, devConfig.appName, devConfig.currentArchitecture, devConfig.appName + '.app')]
 		$.runSequence 'nwjs:build:createDev', 'nwjs:build:npm-install:dev', cb

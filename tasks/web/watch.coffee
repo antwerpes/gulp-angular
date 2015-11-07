@@ -25,7 +25,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					.replace /\.sass$/, '.css'
 					.replace /\.coffee$/, '.js'
 					.replace /\.jade$/, '.html'
-				$.del devFile
+				$.del.sync devFile
 				$.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
 			.on 'change', (path) ->
 				$.runSequence 'web:dev:transpile:' + switch $.path.extname path
@@ -38,22 +38,25 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					$.runSequence 'web:dev:copy-images'
 
 		$.gracefulChokidar.watch 'src',
-				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$)[^.]+$/
+				ignored: /^.*\.(?!css$|html$|js$|png$|jpg$|gif$|svg$|ico$|json$)[^.]+$/
 				ignoreInitial: yes
 				persistent: yes
 			.on 'add', (path) ->
 				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
 					$.runSequence 'web:dev:copy-images'
+				if $.path.extname(path) in ['.json']
+					$.runSequence 'web:dev:assets'
 				$.runSequence 'web:dev:inject'
 			.on 'error', $.handleStreamError
 			.on 'unlink', (path) -> $.runSequence 'web:dev:inject'
 			.on 'change', (path) ->
-				if path.indexOf('index.html')
+				if path.indexOf('index.html') > -1
 					$.runSequence 'web:dev:inject', -> $.browserSync.reload(path)
 					return
 				switch $.path.extname path
 					when '.html', '.js'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
 					when '.css'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
+					when '.json' then $.runSequence 'web:dev:assets', -> $.browserSync.reload(path)
 					else $.browserSync.reload path
 		# chokidar doenst accept an array as first parameter, so we need to start the watcher on nothing and use the add function.
 		$.gracefulChokidar.watch '!**/*',
