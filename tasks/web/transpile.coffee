@@ -8,6 +8,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				.on 'error', $.handleStreamError
 			.pipe $.if /(\.scss|\.sass)$/, $.sass
 				indentedSyntax: yes # enable sass syntax
+				includePaths: ['src/styles']
 				onError: (err) ->
 					# FIXME: abort on startup, continue when watching
 					# TODO: investigate when task is called within $.sequence
