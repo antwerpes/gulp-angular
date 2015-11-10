@@ -7,9 +7,10 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		cwd = process.cwd()
 		appCacheFile = null
 		appCacheFileContent = null
-		writeServiceWorker = (file) ->
+		writeServiceWorker = (file, encoding, cb) ->
 			appCacheFile = file
 			appCacheFileContent = String(file.contents)
+			cb()
 		endStream = ->
 			_this = this
 			cacheFiles = $.parseAppcacheManifest(appCacheFileContent).cache
@@ -23,7 +24,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			_this.emit 'data', appCacheFile
 			_this.emit 'data', serviceWorkerFile
 			_this.emit 'end'
-		$.through(writeServiceWorker, endStream);
+		$.through2.obj(writeServiceWorker, endStream);
 	generateAppCacheManifest = (dir) ->
 		if globalConfig.generateApplicationCacheManifest == yes
 			gulp.src(dir + '/**')
