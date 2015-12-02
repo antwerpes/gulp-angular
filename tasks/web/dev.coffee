@@ -5,17 +5,21 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	#	copy images to dev
 	gulp.task 'web:dev:copy-images', ->
-		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}']
+		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/static/**']
 			.pipe $.changed 'dev'
 			.pipe gulp.dest 'dev'
 			.pipe $.size()
 
 	# copy all js, css and html files. those dont need to be touched in this phase
 	gulp.task 'web:dev:copy-sources', () ->
-		gulp.src ['src/**/*.{js,css,html}', '!src/index.html']
+		gulp.src ['src/**/*.{js,css,html}', '!src/index.html', '!src/static/**']
 			.pipe $.changed 'dev'
 			.pipe gulp.dest('dev')
 			.pipe $.size()
+
+	gulp.task 'web:dev:copy-static', () ->
+		gulp.src ['src/static/**/*.*']
+			.pipe(gulp.dest('dev/static'))
 
 	gulp.task 'web:dev:copy-index', () ->
 		gulp.src ['src/index.html']
@@ -46,7 +50,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# copy all other assets and all bower-main-files to dev
 	gulp.task 'web:dev:assets', ['web:dev:copy-bower-assets'], ->
 		# copy all asset files
-		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}']
+		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!src/static/**']
 			.pipe $.changed 'dev'
 			.pipe gulp.dest 'dev'
 			.pipe $.size()
@@ -60,5 +64,4 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		return $.mergeStream ownFiles, bowerMainFiles
 
 	# build the app to dev
-	# gulp.task 'web:dev:build', ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources']
-	gulp.task 'web:dev:build', (cb) -> $.runSequence ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources'], 'web:dev:generate-appcache-manifest', cb
+	gulp.task 'web:dev:build', (cb) -> $.runSequence ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources', 'web:dev:copy-static'], 'web:dev:generate-appcache-manifest', cb

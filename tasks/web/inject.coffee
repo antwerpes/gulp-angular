@@ -7,10 +7,10 @@ module.exports = ({gulp, $, config}) ->
 	# we @import them over there and don't inject them here.
 	gulp.task 'web:dev:inject', ['web:dev:transpile'], ->
 		# sort js dependencies by modules and dependecies
-		jsSources = gulp.src(['dev/**/*.js', '!**/*{test,e2e,partial}.js', '!dev/bower_components/**/*' ], nodir:yes)
+		jsSources = gulp.src(['dev/**/*.js', '!**/*{test,e2e,partial}.js', '!dev/bower_components/**/*', '!dev/static/**/*'], nodir:yes)
 			.pipe($.angularFilesort())
 
-		cssSources = gulp.src(['dev/**/*.css', '!dev/bower_components/**/*'], read: no, nodir: yes)
+		cssSources = gulp.src(['dev/**/*.css', '!dev/bower_components/**/*', '!dev/static/**/*'], read: no, nodir: yes)
 
 		gulp.src 'src/index.html'
 			.pipe $.wiredep.stream

@@ -5,15 +5,19 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Copies images from dev to dist, ignoring images found in bower components.
 	gulp.task 'web:dist:copy-images', ->
-		gulp.src ['dev/**/*.{png,jpg,gif,svg,ico}']
+		gulp.src ['dev/**/*.{png,jpg,gif,svg,ico}', '!dev/static/**/*']
 			.pipe gulp.dest 'dist'
 			.pipe $.size()
+
+	gulp.task 'web:dist:copy-static', () ->
+		gulp.src ['dev/static/**/*.*']
+			.pipe(gulp.dest('dist/static'))
 
 
 	# Copies all assets from dev to dist
 	gulp.task 'web:dist:assets', ->
 		# copy all files other than those handled by useref and inject to dist
-	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**']
+	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**', '!dev/static/**/*']
 	 		.pipe $.changed 'dist'
 	 		.pipe gulp.dest 'dist'
 	 		.pipe $.size()
@@ -34,7 +38,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# create partials from html files
 	gulp.task 'web:dev:create-partials', ->
-		gulp.src ['dev/**/*.html', '!dev/index.html']
+		gulp.src ['dev/**/*.html', '!dev/index.html', '!dev/static/**/*']
 			.pipe $.minifyHtml
 				empty: yes
 				spare: yes
@@ -46,11 +50,11 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# remove html files after creating the partial-js-files
 	gulp.task 'web:dev:remove-html', ()->
-		$.del ['dev/**/*.html', '!dev/index.html']
+		$.del ['dev/**/*.html', '!dev/index.html', '!dev/static/**/*']
 
 	# rebase css urls to be relative to dev/styles/
 	gulp.task 'web:dev:rebase-css', ->
-		gulp.src ['dev/**/*.css'], nodir: yes, base: 'dev'
+		gulp.src ['dev/**/*.css', '!dev/static/**/*'], nodir: yes, base: 'dev'
 			.pipe $.cssretarget
 				root: 'dev/styles'
 				silent: yes
@@ -63,7 +67,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			console.warn $.chalk.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
 		gulp.src 'dev/index.html'
 			# Inject angular pre-cached partials into index.html:
-			.pipe $.inject gulp.src('dev/**/*.partial.js', read: no),
+			.pipe $.inject gulp.src(['dev/**/*.partial.js', '!dev/static/**/*'], read: no),
 				starttag: '<!-- inject:partials -->'
 				addRootSlash: no
 				ignorePath: ['dev']
@@ -97,6 +101,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'web:build', ['web:clean'], (cb) ->
 		$.runSequence 'web:dev:build',
 			'web:dist:copy-images'
+			'web:dist:copy-static'
 			'web:dist:assets',
 			'web:dev:rebase-css',
 			'web:dist:partials',
