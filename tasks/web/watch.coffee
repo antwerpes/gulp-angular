@@ -53,6 +53,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				if path.indexOf('index.html') > -1
 					$.runSequence 'web:dev:inject', -> $.browserSync.reload(path)
 					return
+				if $.path.extname(path) in ['.png','.jpg','.gif','.svg','.ico']
+					$.runSequence 'web:dev:copy-images'
 				switch $.path.extname path
 					when '.html', '.js'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
 					when '.css'	then $.runSequence 'web:dev:copy-sources', -> $.browserSync.reload(path)
