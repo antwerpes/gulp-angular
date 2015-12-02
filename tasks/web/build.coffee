@@ -99,13 +99,18 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
 	gulp.task 'web:build', ['web:clean'], (cb) ->
-		$.runSequence 'web:dev:build',
+		sequenceParams = [
+			'web:dev:build'
 			'web:dist:copy-images'
 			'web:dist:copy-static'
-			'web:dist:assets',
-			'web:dev:rebase-css',
-			'web:dist:partials',
-			'web:dist:build',
-			'web:dev:clean',
-			'web:dist:generate-appcache-manifest'
-			cb
+			'web:dist:assets'
+			'web:dev:rebase-css'
+			'web:dist:partials'
+			'web:dist:build'
+			'web:dev:clean'
+		]
+		if globalConfig.generateOfflineApplicationCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dist:generate-offline-appcache-manifest'
+		if globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dist:generate-offline-service-worker-from-appcache-manifest'
+		$.runSequence.apply $.runSequence, sequenceParams.concat(cb)

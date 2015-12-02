@@ -64,4 +64,17 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		return $.mergeStream ownFiles, bowerMainFiles
 
 	# build the app to dev
-	gulp.task 'web:dev:build', (cb) -> $.runSequence ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources', 'web:dev:copy-static'], 'web:dev:generate-appcache-manifest', cb
+	gulp.task 'web:dev:build', (cb) ->
+		build = [
+			'web:dev:inject'
+			'web:dev:assets'
+			'web:dev:copy-images'
+			'web:dev:copy-sources'
+			'web:dev:copy-static'
+		]
+		sequenceParams = [build]
+		if globalConfig.generateOfflineApplicationCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dev:generate-offline-appcache-manifest'
+		if globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dev:generate-offline-service-worker-from-appcache-manifest'
+		$.runSequence.apply $.runSequence, sequenceParams.concat(cb)
