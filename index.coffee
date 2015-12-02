@@ -6,20 +6,28 @@ module.exports = (gulp, config) ->
 			'graceful-chokidar'
 			'del'
 			'xml2json'
-			'nw-builder'
 			'wiredep'
 			'browser-sync'
 			'main-bower-files'
 			'lazypipe'
 			'uglify-save-license'
 			'merge-stream'
-			'deep-extend'
 			'convict'
 			'chalk'
 		]
 		config: path.join(__dirname, 'package.json')
 		scope: ['dependencies']
 		lazy: yes
+	)
+
+	# require politor plugins
+	$.politor = require('gulp-load-plugins')(
+		pattern: [
+			'politor-*'
+		],
+		config: path.join(path.dirname(module.parent.parent.filename), 'package.json')
+		lazy: no
+		DEBUG: yes
 	)
 
 	$.path = path
@@ -42,7 +50,12 @@ module.exports = (gulp, config) ->
 		'web'
 		'component'
 		'cordova'
-		'nwjs'
 		'create'
 		'test'
 	]
+
+	## init politor plugins
+
+	for taskname, mod of $.politor
+		mod({gulp, config: conf.get(taskname.replace('politor','').toLowerCase()), globalConfig})
+
