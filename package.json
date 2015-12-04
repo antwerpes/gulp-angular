@@ -67,13 +67,12 @@
     "main-bower-files": "^2.9.0",
     "merge-stream": "^1.0.0",
     "nw-builder": "^2.0.2",
-    "parse-appcache-manifest": "^0.2.0",
     "protractor": "^2.5.1",
     "run-sequence": "git://github.com/antwerpes/run-sequence",
-    "through2": "^2.0.0",
     "uglify-save-license": "^0.4.1",
     "wiredep": "^2.2.x",
-    "xml2json": "^0.9.0"
+    "xml2json": "^0.9.0",
+    "gulp-generate-service-worker-from-appcache-manifest": "git://github.com/dematerializer/gulp-generate-service-worker-from-appcache-manifest"
   },
   "optionalDependencies": {
     "gulp-sass": "^2.1.0"
