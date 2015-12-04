@@ -3,13 +3,11 @@ module.exports = ({gulp, $, config}) ->
 	# Requires 'ios-deploy' node module to be installed globally.
 	gulp.task 'cordova:ios:run', ->
 		gulp.src('').pipe $.shell [
-			'cordova prepare'
 			'cordova run ios'
 		], cwd: config.path
 
 	# Runs the Android platform project on the currently plugged-in device.
 	gulp.task 'cordova:android:run', ->
 		gulp.src('').pipe $.shell [
-			'cordova prepare'
 			'cordova run android'
 		], cwd: config.path
