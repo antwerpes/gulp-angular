@@ -72,7 +72,7 @@
     "uglify-save-license": "^0.4.1",
     "wiredep": "^2.2.x",
     "xml2json": "^0.9.0",
-    "gulp-generate-service-worker-from-appcache-manifest": "git://github.com/dematerializer/gulp-generate-service-worker-from-appcache-manifest"
+    "gulp-offline-service-worker-from-app-cache-manifest": "git://github.com/dematerializer/gulp-offline-service-worker-from-app-cache-manifest"
   },
   "optionalDependencies": {
     "gulp-sass": "^2.1.0"

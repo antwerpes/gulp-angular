@@ -109,8 +109,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			'web:dist:build'
 			'web:dev:clean'
 		]
-		if globalConfig.generateOfflineApplicationCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
-			sequenceParams.push 'web:dist:generate-offline-appcache-manifest'
+		if globalConfig.generateOfflineAppCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dist:offline:app-cache-manifest'
 		if globalConfig.generateOfflineServiceWorker == yes
-			sequenceParams.push 'web:dist:generate-offline-service-worker-from-appcache-manifest'
+			sequenceParams.push 'web:dist:offline:service-worker'
 		$.runSequence.apply $.runSequence, sequenceParams.concat(cb)

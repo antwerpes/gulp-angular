@@ -73,8 +73,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			'web:dev:copy-static'
 		]
 		sequenceParams = [build]
-		if globalConfig.generateOfflineApplicationCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
-			sequenceParams.push 'web:dev:generate-offline-appcache-manifest'
+		if globalConfig.generateOfflineAppCacheManifest == yes or globalConfig.generateOfflineServiceWorker == yes
+			sequenceParams.push 'web:dev:offline:app-cache-manifest'
 		if globalConfig.generateOfflineServiceWorker == yes
-			sequenceParams.push 'web:dev:generate-offline-service-worker-from-appcache-manifest'
+			sequenceParams.push 'web:dev:offline:service-worker'
 		$.runSequence.apply $.runSequence, sequenceParams.concat(cb)

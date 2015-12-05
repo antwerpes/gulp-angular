@@ -8,13 +8,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				filename: globalConfig.angularModuleName + '.appcache'
 			.pipe gulp.dest dir
 
-	generateServiceWorkerFromAppCacheManifest = (dir) ->
+	generateOfflineServiceWorkerFromAppCacheManifest = (dir) ->
 		gulp.src(dir + '/' + globalConfig.angularModuleName + '.appcache')
-			.pipe $.generateServiceWorkerFromAppcacheManifest dir: dir
+			.pipe $.offlineServiceWorkerFromAppCacheManifest dir: dir
 			.pipe gulp.dest dir
 
-	gulp.task 'web:dev:generate-offline-appcache-manifest', -> generateAppCacheManifest 'dev'
-	gulp.task 'web:dist:generate-offline-appcache-manifest', -> generateAppCacheManifest 'dist'
+	gulp.task 'web:dev:offline:app-cache-manifest', -> generateAppCacheManifest 'dev'
+	gulp.task 'web:dist:offline:app-cache-manifest', -> generateAppCacheManifest 'dist'
 
-	gulp.task 'web:dev:generate-offline-service-worker-from-appcache-manifest', -> generateServiceWorkerFromAppCacheManifest 'dev'
-	gulp.task 'web:dist:generate-offline-service-worker-from-appcache-manifest', -> generateServiceWorkerFromAppCacheManifest 'dist'
+	gulp.task 'web:dev:offline:service-worker', -> generateOfflineServiceWorkerFromAppCacheManifest 'dev'
+	gulp.task 'web:dist:offline:service-worker', -> generateOfflineServiceWorkerFromAppCacheManifest 'dist'
