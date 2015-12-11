@@ -2,7 +2,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	###
 		Stage 1, transpile and copy everything and make a working version of the app in dev
 	###
-
+	config = {} unless config?
 	#	copy images to dev
 	gulp.task 'web:dev:copy-images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/static/**']

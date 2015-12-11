@@ -11,7 +11,6 @@ module.exports = (gulp, config) ->
 			'lazypipe'
 			'uglify-save-license'
 			'merge-stream'
-			'chalk'
 		]
 		config: path.join(__dirname, 'package.json')
 		scope: ['dependencies']
@@ -33,6 +32,10 @@ module.exports = (gulp, config) ->
 	$.handleStreamError = require './helper/handle-stream-error'
 
 	globalConfig = config
+
+	config.web ?= {
+		sourcemaps: no
+	}
 
 	unless globalConfig.angularModuleName
 		return console.error $.chalk.bgRed.white 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'

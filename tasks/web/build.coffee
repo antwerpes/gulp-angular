@@ -64,7 +64,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'web:dist:build', ->
 		useSourcemaps = $.util.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
 		if useSourcemaps
-			console.warn $.chalk.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
+			console.warn $.util.colors.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
 		gulp.src 'dev/index.html'
 			# Inject angular pre-cached partials into index.html:
 			.pipe $.inject gulp.src(['dev/**/*.partial.js', '!dev/static/**/*'], read: no),
