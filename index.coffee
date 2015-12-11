@@ -43,7 +43,6 @@ module.exports = (gulp, config) ->
 	require('./tasks/' + task)({gulp, $, config: config[task], globalConfig}) for task in [
 		'web'
 		'component'
-		'test'
 	]
 
 	## init politor plugins
