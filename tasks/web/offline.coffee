@@ -1,6 +1,6 @@
 module.exports = ({gulp, $, config, globalConfig}) ->
 	generateAppCacheManifest = (dir) ->
-		gulp.src(dir + '/**')
+		gulp.src [dir + '/**', '!' + globalConfig.offlineExludePattern]
 			.pipe $.manifest
 				hash: yes
 				timestamp: no
