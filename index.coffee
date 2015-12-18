@@ -43,17 +43,9 @@ module.exports = (gulp, config) ->
 		'merge-stream'
 	]
 
-	# require politor plugins
-	$.politor = require('gulp-load-plugins')(
-		pattern: [
-			'politor-*'
-		],
-		config: path.join(path.dirname(module.parent.parent.filename), 'package.json')
-		lazy: no
-	)
-
-	$.path = path
 	$.fs = require 'fs'
+	$.path = path
+
 	$.runSequence = require('run-sequence').use(gulp)
 	$.handleStreamError = require './helper/handle-stream-error'
 
@@ -72,7 +64,20 @@ module.exports = (gulp, config) ->
 	]
 
 	## init politor plugins
+	do () ->
+		parentDir = path.join(path.dirname(module.parent.parent.filename))
+		parentPjson = $.fs.readFileSync(path.join(parentDir, 'package.json'), 'utf-8')
+		try
+			parentPjson = JSON.parse(parentPjson)
+		catch parsingError
+			console.log 'failt to parse the parent package.json', parsingError
+			return
+		for plugin of parentPjson.devDependencies
+			continue if plugin.indexOf('politor-') isnt 0
+			try
+				pluginf = require(path.join(parentDir, 'node_modules', plugin))
+				pluginf({gulp, config: config[plugin.replace('politor','').toLowerCase()] or {}, globalConfig})
+			catch initError
+				console.log 'failed to load politor-plugin: ' + plugin, initError
 
-	for taskname, mod of $.politor
-		mod({gulp, config: config[taskname.replace('politor','').toLowerCase()], globalConfig})
 
