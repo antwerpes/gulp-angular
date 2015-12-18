@@ -7,7 +7,6 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'web:dist:copy-images', ->
 		gulp.src ['dev/**/*.{png,jpg,gif,svg,ico}', '!dev/static/**/*']
 			.pipe gulp.dest 'dist'
-			.pipe $.size()
 
 	gulp.task 'web:dist:copy-static', () ->
 		gulp.src ['dev/static/**/*.*']
@@ -18,15 +17,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'web:dist:assets', ->
 		# copy all files other than those handled by useref and inject to dist
 	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**', '!dev/static/**/*']
-	 		.pipe $.changed 'dist'
+	 		.pipe $.gulpChanged 'dist'
 	 		.pipe gulp.dest 'dist'
-	 		.pipe $.size()
 
 		# copy all bower-main-files which are not js or css (i.e bootstrap fonts)
 	 	bowerMainFiles = gulp.src $.mainBowerFiles(), base: './'
-	 		.pipe $.ignore.exclude '**/*.{js,css}'
+	 		.pipe $.gulpIgnore.exclude '**/*.{js,css}'
 	 		.pipe gulp.dest 'dist'
-	 		.pipe $.size()
 
 	 	return $.mergeStream ownFiles, bowerMainFiles
 
@@ -39,14 +36,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# create partials from html files
 	gulp.task 'web:dev:create-partials', ->
 		gulp.src ['dev/**/*.html', '!dev/index.html', '!dev/static/**/*']
-			.pipe $.minifyHtml
+			.pipe $.gulpMinifyHtml
 				empty: yes
 				spare: yes
 				quotes: yes
-			.pipe $.ngHtml2js moduleName: globalConfig.angularModuleName
-			.pipe $.rename suffix: '.partial'
+			.pipe $.gulpNgHtml2js moduleName: globalConfig.angularModuleName
+			.pipe $.gulpRename suffix: '.partial'
 			.pipe gulp.dest 'dev'
-			.pipe $.size()
 
 	# remove html files after creating the partial-js-files
 	gulp.task 'web:dev:remove-html', ()->
@@ -55,47 +51,46 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# rebase css urls to be relative to dev/styles/
 	gulp.task 'web:dev:rebase-css', ->
 		gulp.src ['dev/**/*.css', '!dev/static/**/*'], nodir: yes, base: 'dev'
-			.pipe $.cssretarget
+			.pipe $.gulpCssretarget
 				root: 'dev/styles'
 				silent: yes
 			.pipe gulp.dest 'dev'
 
 	# inject partials,
 	gulp.task 'web:dist:build', ->
-		useSourcemaps = $.util.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
+		useSourcemaps = $.gulpUtil.env.sourcemaps? or config.sourcemaps #TODO: DOC: --sourcemaps
 		if useSourcemaps
-			console.warn $.util.colors.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
+			console.warn $.gulpUtil.colors.red.bgYellow 'Warning: the minified code will contain sourcemaps, the sourcecode will be visible.'
 		gulp.src 'dev/index.html'
 			# Inject angular pre-cached partials into index.html:
-			.pipe $.inject gulp.src(['dev/**/*.partial.js', '!dev/static/**/*'], read: no),
+			.pipe $.gulpInject gulp.src(['dev/**/*.partial.js', '!dev/static/**/*'], read: no),
 				starttag: '<!-- inject:partials -->'
 				addRootSlash: no
 				ignorePath: ['dev']
 			# Concatenate asset files referenced in <!-- build:* -->
 			# and postprocess resulting compound css and js files:
-			.pipe concatenatedAssetsFilter = $.useref.assets searchPath: ['dev']
-				.pipe $.if '*.css', $.minifyCss
+			.pipe concatenatedAssetsFilter = $.gulpUseref.assets searchPath: ['dev']
+				.pipe $.gulpIf '*.css', $.gulpMinifyCss
 					advanced: no # be friendly to old browsers
-				.pipe $.if '*.js', $.ngAnnotate()
-				.pipe $.if useSourcemaps, $.sourcemaps.init()
-				.pipe $.if '*.js', $.uglify
-					preserveComments: $.uglifySaveLicense
-				.pipe $.if useSourcemaps, $.sourcemaps.write()
+				.pipe $.gulpIf '*.js', $.gulpNgAnnotate()
+				.pipe $.gulpIf useSourcemaps, $.gulpSourcemaps.init()
+				.pipe $.gulpIf '*.js', $.gulpUglify
+					preserveComments: $.gulpUglifySaveLicense
+				.pipe $.gulpIf useSourcemaps, $.gulpSourcemaps.write()
 				# Append a revision hash to the filename:
-				.pipe $.rev()
+				.pipe $.gulpRev()
 			.pipe concatenatedAssetsFilter.restore()
 			# Continue working on index.html and compound css and js files.
-			.pipe $.useref() # replace <!-- build:* --> placeholders with paths of compound files
-			.pipe $.revReplace() # add revision hashes to compound file references
-			.pipe htmlFilter = $.filter('index.html', restore: yes)
-				.pipe $.minifyHtml
+			.pipe $.gulpUseref() # replace <!-- build:* --> placeholders with paths of compound files
+			.pipe $.gulpRevReplace() # add revision hashes to compound file references
+			.pipe htmlFilter = $.gulpFilter('index.html', restore: yes)
+				.pipe $.gulpMinifyHtml
 					empty: yes
 					spare: yes
 					quotes: yes
 			.pipe htmlFilter.restore
 			# Write out compound files and changes to index.html
 			.pipe gulp.dest 'dist'
-			.pipe $.size()
 
 	# Builds a production-/distribution-ready version of the web app into the dist directory.
 	gulp.task 'web:build', ['web:clean'], (cb) ->

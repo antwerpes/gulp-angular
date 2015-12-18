@@ -1,21 +1,47 @@
 module.exports = (gulp, config) ->
 	path = require 'path'
-	$ = require('gulp-load-plugins')(
-		pattern: [
-			'gulp-*'
-			'graceful-chokidar'
-			'del'
-			'wiredep'
-			'browser-sync'
-			'main-bower-files'
-			'lazypipe'
-			'uglify-save-license'
-			'merge-stream'
-		]
-		config: path.join(__dirname, 'package.json')
-		scope: ['dependencies']
-		lazy: yes
-	)
+	lazy_require = (libs) ->
+		e = {}
+		for lib in libs
+			do (lib) -> Object.defineProperty e,
+				lib.replace(/\b-([a-z])/g, (all, char) -> char.toUpperCase()),
+				get: -> require(lib)
+		e
+
+	$ = lazy_require [
+		'gulp-angular-filesort'
+		'gulp-autoprefixer'
+		'gulp-changed'
+		'gulp-coffee'
+		'gulp-coffeelint'
+		'gulp-concat'
+		'gulp-cssretarget'
+		'gulp-filter'
+		'gulp-if'
+		'gulp-ignore'
+		'gulp-inject'
+		'gulp-jade'
+		'gulp-less'
+		'gulp-minify-css'
+		'gulp-minify-html'
+		'gulp-ng-annotate'
+		'gulp-ng-classify'
+		'gulp-ng-html2js'
+		'gulp-rename'
+		'gulp-rev'
+		'gulp-sourcemaps'
+		'gulp-uglify'
+		'gulp-useref'
+		'gulp-util'
+		'graceful-chokidar'
+		'del'
+		'wiredep'
+		'browser-sync'
+		'main-bower-files'
+		'lazypipe'
+		'uglify-save-license'
+		'merge-stream'
+	]
 
 	# require politor plugins
 	$.politor = require('gulp-load-plugins')(

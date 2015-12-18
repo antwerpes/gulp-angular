@@ -6,16 +6,14 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	#	copy images to dev
 	gulp.task 'web:dev:copy-images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/static/**']
-			.pipe $.changed 'dev'
+			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest 'dev'
-			.pipe $.size()
 
 	# copy all js, css and html files. those dont need to be touched in this phase
 	gulp.task 'web:dev:copy-sources', () ->
 		gulp.src ['src/**/*.{js,css,html}', '!src/index.html', '!src/static/**']
-			.pipe $.changed 'dev'
+			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest('dev')
-			.pipe $.size()
 
 	gulp.task 'web:dev:copy-static', () ->
 		gulp.src ['src/static/**/*.*']
@@ -23,9 +21,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 
 	gulp.task 'web:dev:copy-index', () ->
 		gulp.src ['src/index.html']
-			.pipe $.changed 'dev'
+			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest('dev')
-			.pipe $.size()
 
 	# read the config for folders that need to be copied to the parent
 	# usage example in package.json:
@@ -51,15 +48,13 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	gulp.task 'web:dev:assets', ['web:dev:copy-bower-assets'], ->
 		# copy all asset files
 		ownFiles = gulp.src ['src/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!src/static/**']
-			.pipe $.changed 'dev'
+			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest 'dev'
-			.pipe $.size()
 
 		# copy all bower-main-files
 		bowerMainFiles = gulp.src $.mainBowerFiles(), base: './'
-			.pipe $.changed 'dev'
+			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest 'dev'
-			.pipe $.size()
 
 		return $.mergeStream ownFiles, bowerMainFiles
 

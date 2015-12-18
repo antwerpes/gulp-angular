@@ -8,18 +8,18 @@ module.exports = ({gulp, $, config}) ->
 	gulp.task 'web:dev:inject', ['web:dev:transpile'], ->
 		# sort js dependencies by modules and dependecies
 		jsSources = gulp.src(['dev/**/*.js', '!**/*{test,e2e,partial}.js', '!dev/bower_components/**/*', '!dev/static/**/*'], nodir:yes)
-			.pipe($.angularFilesort())
+			.pipe($.gulpAngularFilesort())
 
 		cssSources = gulp.src(['dev/**/*.css', '!dev/bower_components/**/*', '!dev/static/**/*'], read: no, nodir: yes)
 
 		gulp.src 'src/index.html'
 			.pipe $.wiredep.stream
 				ignorePath: /\.\.\//
-			.pipe $.inject cssSources,
+			.pipe $.gulpInject cssSources,
 				starttag: '<!-- inject:styles -->'
 				addRootSlash: no
 				ignorePath: ['dev'] # strips away the 'src/' and 'dev/' path components
-			.pipe $.inject jsSources,
+			.pipe $.gulpInject jsSources,
 				starttag: '<!-- inject:scripts -->'
 				addRootSlash: no
 				ignorePath: ['src', 'dev']
