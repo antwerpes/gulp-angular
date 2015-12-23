@@ -13,6 +13,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					# TODO: investigate when task is called within $.sequence
 					console.error err
 					$.gulpUtil.beep()
+			.on 'error', $.handleStreamError
 			.pipe $.gulpAutoprefixer()
 			.pipe gulp.dest 'dev'
 			.pipe $.browserSync.reload stream: yes

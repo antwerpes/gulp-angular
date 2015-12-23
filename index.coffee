@@ -29,6 +29,7 @@ module.exports = (gulp, config) ->
 		'gulp-ng-html2js'
 		'gulp-rename'
 		'gulp-rev'
+		'gulp-rev-replace'
 		'gulp-sourcemaps'
 		'gulp-uglify'
 		'gulp-useref'
@@ -60,7 +61,6 @@ module.exports = (gulp, config) ->
 
 	require('./tasks/' + task)({gulp, $, config: config[task], globalConfig}) for task in [
 		'web'
-		'component'
 	]
 
 	## init politor plugins
