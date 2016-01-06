@@ -76,7 +76,7 @@ module.exports = (gulp, config) ->
 			continue if plugin.indexOf('politor-') isnt 0
 			try
 				pluginf = require(path.join(parentDir, 'node_modules', plugin))
-				pluginf({gulp, config: config[plugin.replace('politor','').toLowerCase()] or {}, globalConfig})
+				pluginf({gulp, config: config[plugin.replace('politor-','').toLowerCase()] or {}, globalConfig})
 			catch initError
 				console.log 'failed to load politor-plugin: ' + plugin, initError
 
