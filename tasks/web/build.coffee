@@ -36,10 +36,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# create partials from html files
 	gulp.task 'web:dev:create-partials', ->
 		gulp.src ['dev/**/*.html', '!dev/index.html', '!dev/static/**/*']
-			.pipe $.gulpMinifyHtml
-				empty: yes
-				spare: yes
-				quotes: yes
+			.pipe $.gulpHtmlmin
+				collapseWhitespace: yes
 			.pipe $.gulpNgHtml2js moduleName: globalConfig.angularModuleName
 			.pipe $.gulpRename suffix: '.partial'
 			.pipe gulp.dest 'dev'
@@ -69,25 +67,20 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 				ignorePath: ['dev']
 			# Concatenate asset files referenced in <!-- build:* -->
 			# and postprocess resulting compound css and js files:
-			.pipe concatenatedAssetsFilter = $.gulpUseref.assets searchPath: ['dev']
-				.pipe $.gulpIf '*.css', $.gulpMinifyCss
-					advanced: no # be friendly to old browsers
-				.pipe $.gulpIf '*.js', $.gulpNgAnnotate()
-				.pipe $.gulpIf useSourcemaps, $.gulpSourcemaps.init()
-				.pipe $.gulpIf '*.js', $.gulpUglify
-					preserveComments: $.gulpUglifySaveLicense
-				.pipe $.gulpIf useSourcemaps, $.gulpSourcemaps.write()
+			.pipe $.gulpUseref(searchPath: 'dev', $.lazypipe()
+				.pipe(-> $.gulpIf '*.css', $.gulpCssnano safe: yes, autoprefixer: no)
+				.pipe(-> $.gulpIf '*.js', $.gulpNgAnnotate())
+				.pipe(-> $.gulpIf useSourcemaps, $.gulpSourcemaps.init())
+				.pipe(-> $.gulpIf '*.js', $.gulpUglify preserveComments: $.gulpUglifySaveLicense)
+				.pipe(-> $.gulpIf useSourcemaps, $.gulpSourcemaps.write())
 				# Append a revision hash to the filename:
-				.pipe $.gulpRev()
-			.pipe concatenatedAssetsFilter.restore()
+				.pipe $.gulpRev
+			)
 			# Continue working on index.html and compound css and js files.
-			.pipe $.gulpUseref() # replace <!-- build:* --> placeholders with paths of compound files
 			.pipe $.gulpRevReplace() # add revision hashes to compound file references
 			.pipe htmlFilter = $.gulpFilter('index.html', restore: yes)
-				.pipe $.gulpMinifyHtml
-					empty: yes
-					spare: yes
-					quotes: yes
+				.pipe $.gulpHtmlmin
+					collapseWhitespace: yes
 			.pipe htmlFilter.restore
 			# Write out compound files and changes to index.html
 			.pipe gulp.dest 'dist'
