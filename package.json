@@ -13,6 +13,7 @@
   "homepage": "https://github.com/antwerpes/gulp-angular",
   "bugs": "https://github.com/antwerpes/gulp-angular/issues",
   "dependencies": {
+    "bower-files": "^3.11.3",
     "browser-sync": "^2.11.0",
     "coffee-script": "^1.10.0",
     "del": "^2.2.0",
@@ -43,11 +44,10 @@
     "gulp-useref": "^3.0.4",
     "gulp-util": "^3.0.7",
     "lazypipe": "^1.0.1",
-    "main-bower-files": "^2.11.1",
     "merge-stream": "^1.0.0",
     "run-sequence": "^1.1.5",
     "uglify-save-license": "^0.4.1",
-    "wiredep": "^3.0.x"
+    "wiredep": "^2.2.x"
   },
   "optionalDependencies": {
     "gulp-sass": "^2.1.1"

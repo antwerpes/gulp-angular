@@ -38,7 +38,7 @@ module.exports = (gulp, config) ->
 		'del'
 		'wiredep'
 		'browser-sync'
-		'main-bower-files'
+		'bower-files'
 		'lazypipe'
 		'uglify-save-license'
 		'merge-stream'
@@ -52,10 +52,14 @@ module.exports = (gulp, config) ->
 
 	globalConfig = config
 
-	config.web ?= {
-		sourcemaps: no
-	}
+	config.web ?= {}
 
+	config.web.sourcemaps ?= no
+	config.web.useBower ?= yes
+
+	config.web.frontendDepsPath = if config.web.useBower then 'bower_components' else 'node_modules'
+	config.web.frontendDepsJson = if config.web.useBower then 'bower.json' else 'package.json'
+	console.log config
 	unless globalConfig.angularModuleName
 		return console.error $.chalk.bgRed.white 'Error: no angular module name given. this is necessary to allow automatic template conversion and ng-annotate to work'
 
@@ -80,4 +84,4 @@ module.exports = (gulp, config) ->
 			catch initError
 				console.log 'failed to load politor-plugin: ' + plugin, initError
 
-
+	$

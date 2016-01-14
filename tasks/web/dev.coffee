@@ -2,7 +2,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	###
 		Stage 1, transpile and copy everything and make a working version of the app in dev
 	###
-	config = {} unless config?
+
 	#	copy images to dev
 	gulp.task 'web:dev:copy-images', ->
 		gulp.src ['src/**/*.{png,jpg,gif,svg,ico}', '!src/static/**']
@@ -39,8 +39,8 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 		if config.copyBowerAssets?
 			streams = []
 			for pkg, assetsFolder of config.copyBowerAssets
-				path = $.path.join 'bower_components',pkg,assetsFolder,'**','*'
-				streams.push gulp.src(path, cwd: '.').pipe gulp.dest $.path.join 'dev', assetsFolder
+				path = $.path.join config.frontendDepsPath,pkg,assetsFolder,'**','*'
+				streams.push gulp.src(path, cwd: '.').pipe(require('gulp-debug')()).pipe gulp.dest $.path.join 'dev', assetsFolder
 			return $.mergeStream.apply(null, streams)
 		else cb()
 
@@ -51,12 +51,18 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 			.pipe $.gulpChanged 'dev'
 			.pipe gulp.dest 'dev'
 
-		# copy all bower-main-files
-		bowerMainFiles = gulp.src $.mainBowerFiles(), base: './'
-			.pipe $.gulpChanged 'dev'
-			.pipe gulp.dest 'dev'
+		if config.useBower
+			# copy all bower-main-files
+			bowerMainFiles = gulp.src $.bowerFiles(
+					json: config.frontendDepsJson
+					cwd: $.path.resolve('./'),
+					dir: config.frontendDepsPath
+				).files, base: './'
+				.pipe $.gulpChanged 'dev'
+				.pipe gulp.dest 'dev'
 
-		return $.mergeStream ownFiles, bowerMainFiles
-
+			return $.mergeStream ownFiles, bowerMainFiles
+		else
+			return ownFiles
 	# build the app to dev
 	gulp.task 'web:dev:build', ['web:dev:inject', 'web:dev:assets', 'web:dev:copy-images', 'web:dev:copy-sources', 'web:dev:copy-static']

@@ -16,17 +16,22 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Copies all assets from dev to dist
 	gulp.task 'web:dist:assets', ->
 		# copy all files other than those handled by useref and inject to dist
-	 	ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**', '!dev/static/**/*']
-	 		.pipe $.gulpChanged 'dist'
-	 		.pipe gulp.dest 'dist'
+		ownFiles = gulp.src ['dev/**/*.*', '!**/*.{js,coffee,less,scss,sass,css,html,jade,png,jpg,gif,svg,ico}', '!dev/bower_components/**', '!dev/static/**/*']
+			.pipe $.gulpChanged 'dist'
+			.pipe gulp.dest 'dist'
 
 		# copy all bower-main-files which are not js or css (i.e bootstrap fonts)
-	 	bowerMainFiles = gulp.src $.mainBowerFiles(), base: './'
-	 		.pipe $.gulpIgnore.exclude '**/*.{js,css}'
-	 		.pipe gulp.dest 'dist'
-
-	 	return $.mergeStream ownFiles, bowerMainFiles
-
+		if config.useBower
+			bowerMainFiles = gulp.src $.bowerFiles(
+				json: config.frontendDepsJson
+				cwd: $.path.resolve('./'),
+				dir: config.frontendDepsPath
+			).files, base: './'
+			.pipe $.gulpIgnore.exclude '**/*.{js,css}'
+			.pipe gulp.dest 'dist'
+			return $.mergeStream ownFiles, bowerMainFiles
+		else
+			return ownFiles
 
 	# Minifies and packages html templates/partials found in dev
 	# into pre-cached angular template modules in dist.

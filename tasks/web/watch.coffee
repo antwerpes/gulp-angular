@@ -6,7 +6,7 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 	# Counterparts in dev of files being deleted from src are also being deleted
 	# with inject being triggered afterwards.
 	gulp.task 'web:dev:watch', ['web:dev:build'], ->
-		$.gracefulChokidar.watch 'bower.json',
+		$.gracefulChokidar.watch config.frontendDepsJson,
 				ignoreInitial: yes
 				persistent: yes
 			.on 'change', -> $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()
@@ -61,10 +61,16 @@ module.exports = ({gulp, $, config, globalConfig}) ->
 					when '.json' then $.runSequence 'web:dev:assets', -> $.browserSync.reload(path)
 					else $.browserSync.reload path
 		# chokidar doenst accept an array as first parameter, so we need to start the watcher on nothing and use the add function.
+		frontendDepsFiles = $.bowerFiles(
+			json: config.frontendDepsJson
+			cwd: $.path.resolve('./'),
+			dir: config.frontendDepsPath
+		).files
+
 		$.gracefulChokidar.watch '!**/*',
 				ignoreInitial: yes
 				persistent: yes
-			.add $.mainBowerFiles()
+			.add frontendDepsFiles
 			.on 'change', (path)->
 				switch $.path.extname path
 					when '.js', '.css' then $.runSequence 'web:dev:inject', 'web:dev:assets', -> $.browserSync.reload()

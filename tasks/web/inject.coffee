@@ -13,8 +13,9 @@ module.exports = ({gulp, $, config}) ->
 		cssSources = gulp.src(['dev/**/*.css', '!dev/bower_components/**/*', '!dev/static/**/*'], read: no, nodir: yes)
 
 		gulp.src 'src/index.html'
-			.pipe $.wiredep.stream
+			.pipe $.gulpIf config.useBower, $.wiredep.stream(
 				ignorePath: /\.\.\//
+			)
 			.pipe $.gulpInject cssSources,
 				starttag: '<!-- inject:styles -->'
 				addRootSlash: no
